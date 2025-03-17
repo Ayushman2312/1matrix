@@ -27,8 +27,8 @@ class SubCategory(models.Model):
 
 class AmazonProgram(models.Model):
     PROGRAM_CHOICES = [
-        ('EASY_SHIP', 'Easy Ship'),
-        ('FBA', 'Fulfilled by Amazon'),
+        ('EASY_SHIP', 'Easy Ship Prime'),
+        ('FBA', 'FBA'),
         ('SELLER_FLEX', 'Seller Flex'),
     ]
     
