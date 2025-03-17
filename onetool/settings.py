@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-qro_0-wy_990yy88at5b0(1gaz_hcn^!l@7y9_=$ms6!=cop^5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["89.116.20.128","1matrix.io"]
+ALLOWED_HOSTS = ["89.116.20.128","1matrix.io", "www.1matrix.io"]
 
 
 # Application definition
