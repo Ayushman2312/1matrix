@@ -1,0 +1,637 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1Matrix - Master Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-[#1a1a1a] min-h-screen font-poppins text-sm">
+    {% if request.session.masteradmin_id %}
+    <div class="flex flex-col lg:flex-row">
+        <!-- Left Sidebar 30% -->
+        <nav id="sidebar" class="w-full lg:w-1/5 bg-[#191919] text-[#ffffff] h-auto lg:fixed lg:h-screen p-4 animate__animated animate__slideInLeft hidden lg:block overflow-y-auto no-scrollbar">
+            <!-- Close button for mobile view -->
+            <button onclick="toggleSidebar()" class="lg:hidden absolute top-4 right-4 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            
+            <div class="space-y-20">
+                <div class="flex items-center space-x-3 mb-6 mt-10">
+                    <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
+                        <img src="/media/masteradmin_web/1matrix_logo.jpg" alt="1Matrix Logo" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <p class="text-xs text-[#b3b3b3]">Master Admin</p>
+                        <h2 class="text-base font-bold">1Matrix</h2>
+                        <p class="text-xs text-[#b3b3b3]">by Brandise Box LLP</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <a href="{% url 'masteradmin_dashboard' %}" class="flex items-center space-x-2 p-2 rounded-lg bg-[#2a2a2a] hover:bg-[#343434] transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a href="{% url 'subscription' %}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9a2 2 0 10-4 0v5a2 2 0 01-2 2h6m-6-4h4m8 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Subscriptions</span>
+                    </a>
+
+                    <a href="{% url 'apps' %}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        <span>Apps</span>
+                    </a>
+
+                    <a href="{% url 'sales' %}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Sales</span>
+                    </a>
+
+                    <a href="{% url 'ticket' %}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                        </svg>
+                        <span>Tickets</span>
+                    </a>
+
+                    <a href="{% url 'feedbacks' %}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        </svg>
+                        <span>Feedbacks</span>
+                    </a>
+
+                    <div class="relative">
+                        <button onclick="toggleDropdown('usersSubmenu', 'usersArrow')" class="w-full flex items-center justify-between space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                            <div class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <span>Users</span>
+                            </div>
+                            <svg id="usersArrow" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="usersSubmenu" class="hidden overflow-hidden transition-all duration-300 transform origin-top">
+                            <div class="py-2 pl-6">
+                                <a href="{% url 'users' %}" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">All Users</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Active Users</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Suspended Users</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <button onclick="toggleDropdown('agentsSubmenu', 'agentsArrow')" class="w-full flex items-center justify-between space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                            <div class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span>Agents</span>
+                            </div>
+                            <svg id="agentsArrow" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="agentsSubmenu" class="hidden overflow-hidden transition-all duration-300 transform origin-top">
+                            <div class="py-2 pl-6">
+                                <a href="{% url 'agents' %}" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Agent Dashboard</a>
+                                <a href="{% url 'all_agents' %}" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">All Agents</a>
+                                <a href="{% url 'agent_performance' %}" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Performance</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <button onclick="toggleDropdown('supportSubmenu', 'supportArrow')" class="w-full flex items-center justify-between space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                            <div class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                </svg>
+                                <span>Customer Support</span>
+                            </div>
+                            <svg id="supportArrow" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="supportSubmenu" class="hidden overflow-hidden transition-all duration-300 transform origin-top">
+                            <div class="py-2 pl-6">
+                                <a href="{% url 'mastersupport' %}" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Dashboard Overview</a>
+                                <a href="{% url 'support_department' %}" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Departments</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Performance</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <button onclick="toggleDropdown('hireSubmenu', 'hireArrow')" class="w-full flex items-center justify-between space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                            <div class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Employee</span>
+                            </div>
+                            <svg id="hireArrow" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="hireSubmenu" class="hidden overflow-hidden transition-all duration-300 transform origin-top">
+                            <div class="py-2 pl-6">
+                                <a href="{% url 'allemployees' %}" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">All Employees</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-[#2a2a2a]">Departments</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <a href="{% url 'departments' %}" class="w-full flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18" />
+                            </svg>
+                            <span>Policies</span>
+                        </a>
+                    </div>
+
+                    <div class="pt-4 mt-4 border-t border-[#333333]">
+                        <a href="{% url 'settings' %}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>Settings</span>
+                        </a>
+
+                        <a href="{% url 'masteradmin_logout' %}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2a2a2a] transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Middle Section - 55% -->
+        <main class="w-full lg:w-[55%] p-4 lg:ml-[20%]">
+            <!-- Header Section -->
+            <div class="flex justify-between items-center mb-4 px-4">
+                <!-- Left icon -->
+                <div class="lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+
+                <!-- Center title -->
+                <div class="flex-1 text-center lg:hidden p-0 m-0">
+                    <img src="/media/masteradmin_web/1matrix_logo-bg.png" 
+                         alt="1Matrix Logo" 
+                         class="h-24 sm:h-24 md:h-24 mx-auto object-contain transition-transform duration-300 filter drop-shadow-lg"
+                         style="background: transparent; transform: scale(2);">
+                </div>
+
+                <!-- Right menu button -->
+                <button class="lg:hidden text-white" onclick="toggleSidebar()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="flex flex-row items-center space-x-3 justify-center lg:justify-end mb-4">
+                <button onclick="window.location.href="{% url 'user_details' %}"" class="flex items-center space-x-2 text-[#ffffff] px-3 py-1.5 rounded-lg hover:bg-[#343434] transition-all duration-300 border-2 border-[rgba(16,70,131,1)] min-w-[120px] justify-center group">
+                    <div class="flex items-center space-x-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.31 0-10 1.67-10 5v1h20v-1c0-3.33-6.69-5-10-5z" />
+                        </svg>
+                        <span class="text-xs">Users</span>
+                    </div>
+                    <span class="bg-blue-600 text-white px-1.5 py-0.5 rounded-full text-[10px] group-hover:bg-blue-700 transition-colors">0</span>
+                </button>
+                <button onclick="window.location.href='{% url 'agent_details' %}'" class="flex items-center space-x-2 text-[#ffffff] px-3 py-1.5 rounded-lg hover:bg-[#343434] transition-all duration-300 border-2 border-[rgba(123,79,49,1)] min-w-[120px] justify-center group">
+                    <div class="flex items-center space-x-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span class="text-xs">Teams</span>
+                    </div>
+                    {% if total_agents > 0 %}
+                    <span class="bg-orange-600 text-white px-1.5 py-0.5 rounded-full text-[10px] group-hover:bg-orange-700 transition-colors">{{total_agents}}</span>
+                    {% else %}
+                    <span class="bg-orange-600 text-white px-1.5 py-0.5 rounded-full text-[10px] group-hover:bg-orange-700 transition-colors">0</span>
+                    {% endif %}
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                <div class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300 flex-1">
+                    <h3 class="text-[rgb(237,226,226,1)] text-sm font-bold mb-1">Total Support</h3>
+                    <p class="text-[#4CAF50] text-lg font-semibold">89 Support</p>
+                    <button onclick="showMeetings('total')" class="mt-2 text-[#b3b3b3] text-xs hover:text-white transition-colors duration-300">View All →</button>
+                </div>
+                <div class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300 flex-1">
+                    <h3 class="text-[rgb(237,226,226,1)] text-sm font-bold mb-1">Active Support</h3>
+                    <p class="text-[#2196F3] text-lg font-semibold">45 Support</p>
+                    <button onclick="showMeetings('active')" class="mt-2 text-[#b3b3b3] text-xs hover:text-white transition-colors duration-300">View Active →</button>
+                </div>
+                <div class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300 flex-1">
+                    <h3 class="text-[rgb(237,226,226,1)] text-sm font-bold mb-1">Inactive Support</h3>
+                    <p class="text-[#FF9800] text-lg font-semibold">44 Support</p>
+                    <button onclick="showMeetings('inactive')" class="mt-2 text-[#b3b3b3] text-xs hover:text-white transition-colors duration-300">View Inactive →</button>
+                </div>
+                <div class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300 flex-1">
+                    <h3 class="text-[rgb(237,226,226,1)] text-sm font-bold mb-1">Suspended Support</h3>
+                    <p class="text-[#F44336] text-lg font-semibold">12 Support</p>
+                    <button onclick="showMeetings('suspended')" class="mt-2 text-[#b3b3b3] text-xs hover:text-white transition-colors duration-300">View Suspended →</button>
+                </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="flex sm:grid sm:grid-cols-6 gap-3 mb-4 overflow-x-auto sm:overflow-x-visible no-scrollbar">
+                <button onclick="showCreateSupportPopup()" class="flex-none w-32 sm:w-auto bg-[#212121] rounded-xl p-3 hover:shadow-xl transition-all duration-300 text-center hover:bg-[#2a2a2a]">
+                    <div class="w-8 h-8 bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#FF9800]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </div>
+                    <span class="text-[rgb(237,226,226,1)] text-xs">Create Support</span>
+                </button>
+
+                <!-- Create Support Popup -->
+                <div id="createSupportPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                    <div class="bg-[#212121] rounded-lg p-6 w-96">
+                        <h3 class="text-lg font-bold text-white mb-4">Create Support</h3>
+                        <form id="createSupportForm" method="post" action="{% url 'add_support' %}">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2" for="supportTitle">Support email</label>
+                                <input type="email" id="supportTitle" name="email" class="w-full bg-[#2a2a2a] text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#2196F3]" placeholder="Enter support email" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2" for="departmentSelect">Select Department</label>
+                                <select id="departmentSelect" name="department" class="w-full bg-[#2a2a2a] text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#2196F3]" required>
+                                    <option value="" disabled selected>Select Department</option>
+                                    {% for department in support_departments %}
+                                    <option value="{{ department.id }}">{{ department.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2" for="policySelect">Select Policy</label>
+                                <select id="policySelect" name="policy" class="w-full bg-[#2a2a2a] text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#2196F3]" required>
+                                    <option value="" disabled selected>Select Policy</option>
+                                    {% for policy in policies %}
+                                    <option value="{{ policy.id }}">{{ policy.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="button" onclick="closeCreateSupportPopup()" class="bg-red-500 text-white rounded-lg px-4 py-2 mr-2">Cancel</button>
+                                <button type="submit" class="bg-[#2196F3] text-white rounded-lg px-4 py-2">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <button onclick="showConnectCustomerPopup()" class="flex-none w-32 sm:w-auto bg-[#212121] rounded-xl p-3 hover:shadow-xl transition-all duration-300 text-center hover:bg-[#2a2a2a]">
+                    <div class="w-8 h-8 bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#2196F3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a8 8 0 00-8 8h16a8 8 0 00-8-8z" />
+                        </svg>
+                    </div>
+                    <span class="text-[rgb(237,226,226,1)] text-xs">Connect Customer</span>
+                </button>
+
+                <!-- Connect Customer Popup -->
+                <div id="connectCustomerPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                    <div class="bg-[#212121] rounded-lg p-6 w-96">
+                        <h3 class="text-lg font-bold text-white mb-4">Connect Customer</h3>
+                        <form id="connectCustomerForm">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2" for="supportUsers">Select Support Users</label>
+                                <div class="relative">
+                                    <input type="text" id="supportSearch" class="w-full bg-[#2a2a2a] text-white rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-[#2196F3]" placeholder="Search support users..." oninput="filterSupportUsers(this.value)">
+                                    <select id="supportSelect" name="support_ids" multiple class="w-full bg-[#2a2a2a] text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#2196F3] max-h-32 overflow-y-auto" required aria-required="true">
+                                        {% for support in support_users %}
+                                            <option value="{{ support.id }}">{{ support.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2" for="message">Message</label>
+                                <textarea id="message" name="message" class="w-full bg-[#2a2a2a] text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#2196F3] h-24" placeholder="Enter your message" required></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="button" onclick="closeConnectCustomerPopup()" class="bg-red-500 text-white rounded-lg px-4 py-2 mr-2">Cancel</button>
+                                <button type="submit" class="bg-[#2196F3] text-white rounded-lg px-4 py-2">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <button onclick="showSendReportsPopup()" class="flex-none w-32 sm:w-auto bg-[#212121] rounded-xl p-3 hover:shadow-xl transition-all duration-300 text-center hover:bg-[#2a2a2a]">
+                    <div class="w-8 h-8 bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#4CAF50]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-[rgb(237,226,226,1)] text-xs">Reports</span>
+                </button>
+
+                <button onclick="showRaiseComplaintPopup()" class="flex-none w-32 sm:w-auto bg-[#212121] rounded-xl p-3 hover:shadow-xl transition-all duration-300 text-center hover:bg-[#2a2a2a]">
+                    <div class="w-8 h-8 bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#FF9800]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <span class="text-[rgb(237,226,226,1)] text-xs">Raise Complaint</span>
+                </button>
+
+                <button onclick="showConnectDepartmentPopup()" class="flex-none w-32 sm:w-auto bg-[#212121] rounded-xl p-3 hover:shadow-xl transition-all duration-300 text-center hover:bg-[#2a2a2a]">
+                    <div class="w-8 h-8 bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#00BCD4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h3a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <span class="text-[rgb(237,226,226,1)] text-xs">Connect Department</span>
+                </button>
+
+                <button onclick="showAskFeedbackPopup()" class="flex-none w-32 sm:w-auto bg-[#212121] rounded-xl p-3 hover:shadow-xl transition-all duration-300 text-center hover:bg-[#2a2a2a]">
+                    <div class="w-8 h-8 bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#E91E63]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-[rgb(237,226,226,1)] text-xs">Ask Feedback</span>
+                </button>
+            </div>
+            <!-- Recent Orders -->
+            <div class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300 overflow-x-auto h-[300px]">
+                <h3 class="text-[#ffffff] text-lg font-bold mb-4 border-b-2 border-[#2196F3] pb-2">All Agents</h3>
+
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-[#2a2a2a]">
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name / Mobile</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Department</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Salary</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Email</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-[#252525] divide-y divide-gray-200">
+                        {% for employee in employees %}
+                        <tr class="hover:bg-[#333333] transition-colors duration-200 relative">
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white">{{ employee.name }}<br>{{ employee.phone_number }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white">{{ employee.department }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white">{{ employee.salary }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white">{{ employee.email }}</td>
+                            {% if employee.is_active == True %}
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white">Active</td>
+                            {% elif employee.is_active == False %}
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white">Inactive</td>
+                            {% elif employee.is_rejected == True %}
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white">Rejected</td>
+                            {% endif %}
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-white relative group">
+
+                                <button class="focus:outline-none">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                                    </svg>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-48 bg-[#2a2a2a] rounded-lg shadow-lg hidden group-hover:block z-50">
+                                    {% if employee.is_active == False %}
+                                    <a href="{% url 'mark_employee_as_active' employee.id %}" class="block px-4 py-2 text-sm text-green-500 hover:bg-[#343434]">Mark as Active</a>
+                                    <a href="{% url 'reject_employee' employee.id %}" class="block px-4 py-2 text-sm text-red-500 hover:bg-[#343434]">Reject</a>
+                                    {% elif employee.is_active == True %}
+                                    <a href="{% url 'mark_employee_as_inactive' employee.id %}" class="block px-4 py-2 text-sm text-orange-500 hover:bg-[#343434]">Suspend</a>
+                                    {% endif %}
+                                    <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-[#343434]">Edit</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="mt-4">
+                    {% if employees.has_other_pages %}
+                        <div class="flex justify-between items-center">
+                            {% if employees.has_previous %}
+                                <a href="?page={{ employees.previous_page_number }}" class="text-blue-500 hover:underline" onclick="return paginate({{ employees.previous_page_number }});">Previous</a>
+                            {% endif %}
+                            <span class="text-gray-400">Page {{ employees.number }} of {{ employees.paginator.num_pages }}</span>
+                            {% if employees.has_next %}
+                                <a href="?page={{ employees.next_page_number }}" class="text-blue-500 hover:underline" onclick="return paginate({{ employees.next_page_number }});">Next</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Section - 25% -->
+        <aside class="w-full lg:w-1/4 p-4 space-y-4">
+            <!-- Notifications Carousel -->
+            <div class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-[#ffffff] text-sm font-bold">Recent Updates</h3>
+                    <button id="clearNotifications" class="text-[#b3b3b3] text-xs hover:text-white transition-colors duration-300">Clear All</button>
+                </div>
+                <div id="notificationsContainer" class="space-y-2 min-h-[120px] overflow-y-auto custom-scrollbar">
+                    <div class="p-3 bg-[#252525] rounded-lg">
+                        <p class="text-white text-sm">New feature released</p>
+                        <p class="text-[#b3b3b3] text-xs">10 minutes ago</p>
+                    </div>
+                    <div class="p-3 bg-[#252525] rounded-lg">
+                        <p class="text-white text-sm">System maintenance scheduled</p>
+                        <p class="text-[#b3b3b3] text-xs">1 hour ago</p>
+                    </div>
+                    <div class="p-3 bg-[#252525] rounded-lg">
+                        <p class="text-white text-sm">Security update available</p>
+                        <p class="text-[#b3b3b3] text-xs">2 hours ago</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Performers -->
+            <div class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300">
+                {% comment %} <h3 class="text-[#ffffff] text-base font-bold mb-3">Top Performers</h3> {% endcomment %}
+                
+                <!-- Tabs -->
+                <div class="flex mb-4">
+                    <button id="salesTab" class="flex-1 text-white text-xs py-2 px-4 rounded-lg bg-[#2a2a2a] hover:bg-[#343434] active:bg-[#2196F3] transition-all duration-300 mr-2">Top by Sales</button>
+                </div>
+
+                <!-- Sales Performers -->
+                <div id="salesPerformers" class="grid grid-cols-3 gap-3">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-[#333333] rounded-full mx-auto mb-1"></div>
+                        <p class="text-white text-xs">Sales 1st</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-[#333333] rounded-full mx-auto mb-1"></div>
+                        <p class="text-white text-xs">Sales 2nd</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-[#333333] rounded-full mx-auto mb-1"></div>
+                        <p class="text-white text-xs">Sales 3rd</p>
+                    </div>
+                </div>
+
+                <!-- Meetings Performers -->
+
+                <!-- Popup for View All -->
+                <div id="viewAllPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 hidden backdrop-blur-sm">
+                    <div class="bg-[#212121] rounded-2xl p-8 w-4/5 max-w-6xl transform scale-0 transition-all duration-300 ease-in-out shadow-2xl border border-gray-700 scrollbar-hide" id="popupContentContainer">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-white text-2xl font-bold">Top Performers</h3>
+                            <button onclick="closeViewAllPopup()" class="text-gray-400 hover:text-white transition-colors z-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="popupContent" class="overflow-y-auto max-h-[70vh] scrollbar-hide">
+                            <div class="flex items-center justify-between bg-[#333333] p-4 rounded-lg mb-2">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-[#444444] rounded-full"></div>
+                                    <div>
+                                        <h4 class="text-white font-semibold">Person Name</h4>
+                                        <p class="text-gray-400 text-sm">Sales: $50,000 | Meetings: 25</p>
+                                    </div>
+                                </div>
+                                <button class="text-[#2196F3] hover:underline">View Profile</button>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end relative">
+                            <button onclick="closeViewAllPopup()" class="bg-[#2196F3] text-white py-2 px-6 rounded-lg hover:bg-[#1976D2] transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-[#2196F3]/20 z-50">
+                                <span>Close</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <!-- Broadcast Message -->
+            <!-- Fixed floating button for mobile -->
+            <button onclick="toggleBroadcastPanel()" class="lg:hidden fixed bottom-4 right-4 w-12 h-12 bg-[#2196F3] rounded-full flex items-center justify-center shadow-lg hover:bg-[#1976D2] transition-all duration-300 z-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+            </button>
+
+            <!-- Broadcast panel -->
+            <div id="broadcastPanel" class="bg-[#212121] rounded-xl p-4 hover:shadow-xl transition-all duration-300 lg:block hidden">
+                <h3 class="text-[#ffffff] text-sm font-bold mb-3">Client Communication</h3>
+                <form class="space-y-3">
+                    <select class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 text-sm">
+                        <option value="" disabled selected>Select Department</option>
+                        <option value="all">All Departments</option>
+                        <option value="sales">Sales</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="finance">Finance</option>
+                    </select>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <input type="text" placeholder="Client Name" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 text-sm">
+                        <input type="email" placeholder="Client Email" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 text-sm">
+                    </div>
+                    <textarea placeholder="Client's Problem" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 h-20 text-sm"></textarea>
+                    <textarea placeholder="Your Message" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 h-20 text-sm"></textarea>
+                    <button type="submit" class="w-full bg-[#2196F3] text-white py-2 rounded-lg hover:bg-[#1976D2] transition-all duration-300 text-sm flex items-center justify-center gap-2">
+                        <span>Send Message</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Mobile broadcast panel -->
+            <div id="mobileBroadcastPanel" class="lg:hidden fixed bottom-20 right-4 w-80 bg-[#212121]/80 backdrop-blur-lg rounded-xl p-4 shadow-xl transition-all duration-300 hidden">
+                <h3 class="text-[#ffffff] text-sm font-bold mb-3 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                    Client Communication
+                </h3>
+                <form class="space-y-3">
+                    <select class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 text-sm">
+                        <option value="" disabled selected>Select Department</option>
+                        <option value="all">All Departments</option>
+                        <option value="sales">Sales</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="finance">Finance</option>
+                    </select>
+                    <input type="text" placeholder="Client Name" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 text-sm">
+                    <input type="email" placeholder="Client Email" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 text-sm">
+                    <textarea placeholder="Client's Problem" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 h-20 text-sm"></textarea>
+                    <textarea placeholder="Your Message" class="w-full bg-[#252525] text-white rounded-lg px-3 py-1 h-20 text-sm"></textarea>
+                    <button type="submit" class="w-full bg-[#2196F3] text-white py-2 rounded-lg hover:bg-[#1976D2] transition-all duration-300 text-sm flex items-center justify-center gap-2">
+                        <span>Send Message</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </aside>
+    </div>
+    <script src="{% static 'js/mastersupport.js' %}?v=4"></script>
+    <script src="{% static 'js/script.js' %}?v=2"></script>
+    {% else %}
+<div class="min-h-screen flex items-center justify-center bg-[#1a1a1a] px-4">
+    <div class="max-w-md w-full space-y-8 bg-[#191919] p-8 rounded-lg shadow-lg animate__animated animate__fadeIn">
+        <!-- Logo/Header -->
+        <div class="text-center">
+            <img src="/media/masteradmin_web/1matrix_logo.jpg" alt="1Matrix Logo" class="h-20 w-20 mx-auto rounded-full">
+            <h2 class="mt-6 text-3xl font-bold text-white">Welcome to 1Matrix</h2>
+            <p class="mt-2 text-sm text-gray-400">Please sign in to continue</p>
+        </div>
+
+        <!-- Login Button -->
+        <div class="mt-8">
+            <a href="{% url 'masteradmin_login' %}" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
+                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                    <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                    </svg>
+                </span>
+                Sign in
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+</body>
+</html>

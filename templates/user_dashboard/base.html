@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            overflow: hidden;
+            height: 100vh;
+            font-size: 14px;
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.05) 0%,
+                rgba(147, 51, 234, 0.05) 25%,
+                rgba(236, 72, 153, 0.05) 50%,
+                rgba(234, 179, 8, 0.05) 75%,
+                rgba(34, 197, 94, 0.05) 100%
+            );
+            background-attachment: fixed;
+        }
+        
+        .scrollable-content {
+            height: calc(100vh - 180px);
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .scrollable-nav {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .scrollable-nav::-webkit-scrollbar,
+        .scrollable-content::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .content-wrapper {
+            height: calc(100vh - 2rem);
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .content-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .no-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .glass-card-3xl {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .app-switcher {
+            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-closed {
+                transform: translateX(-100%);
+            }
+            
+            .content-pushed {
+                margin-left: 0;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="flex h-screen p-4">
+        <!-- Mobile Menu Button -->
+        <button id="menuButton" class="fixed top-6 left-6 z-50 p-2 bg-white rounded-xl shadow-lg md:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+
+        <!-- Main Layout -->
+        <div class="flex w-full">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="fixed h-screen glass-effect text-gray-700 transition-all duration-300 ease-in-out 
+                        w-64 md:w-72 shadow-lg rounded-3xl my-4 ml-4 flex flex-col z-50 transform -translate-x-full md:translate-x-0">
+                <!-- Logo Section -->
+                <div class="p-6 sticky top-0 bg-white/70 backdrop-blur-md z-10 rounded-t-3xl">
+                    <div class="flex items-center gap-3">
+                        <span class="text-blue-600 font-semibold text-lg">🔷 logo</span>
+                    </div>
+                </div>
+
+                <!-- Scrollable Navigation -->
+                <div class="scrollable-nav flex-1 p-6 pt-2">
+                    <!-- Apps Menu -->
+                    <div class="px-4 py-2 text-xs text-gray-400 uppercase">APPS</div>
+                    <div class="space-y-1 mb-8">
+                        <a href="#" class="flex items-center px-6 py-3 text-blue-600 border-l-4 border-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors rounded-r-xl">
+                            <span class="mr-3">⊞</span>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3">📊</span>
+                            <span>Analytics</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3">🎯</span>
+                            <span>Projects</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3">📅</span>
+                            <span>Calendar</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3">💬</span>
+                            <span>Messages</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3">📄</span>
+                            <span>Documents</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3">📈</span>
+                            <span>Reports</span>
+                        </a>
+                    </div>
+
+                    <!-- Original Menu -->
+                    <div class="px-4 py-2 text-xs text-gray-400 uppercase">MENU</div>
+                    <nav class="space-y-1">
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3 text-gray-400">🏠</span>
+                            <span>Properties</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3 text-gray-400">📝</span>
+                            <span>Application</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3 text-gray-400">👥</span>
+                            <span>Tenants</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3 text-gray-400">🔧</span>
+                            <span>Maintenance</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3 text-gray-400">💰</span>
+                            <span>Transactions</span>
+                        </a>
+                        <div class="px-4 py-2 mt-6 text-xs text-gray-400 uppercase">TEXT PROGRAM</div>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3 text-gray-400">💬</span>
+                            <span>Message</span>
+                        </a>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-gray-100 transition-colors rounded-r-xl">
+                            <span class="mr-3 text-gray-400">🎯</span>
+                            <span>Support</span>
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main id="mainContent" class="flex-1 md:ml-72 flex flex-col min-h-screen">
+                <div class="content-wrapper">
+                    <!-- Sticky Header -->
+                    <header class="glass-effect flex flex-col md:flex-row justify-between items-center p-6 rounded-3xl mb-6 sticky-header">
+                        <div class="relative flex items-center w-full md:w-auto">
+                            <input type="search" 
+                                   placeholder="Search in project" 
+                                   class="w-full md:w-96 px-4 py-2.5 rounded-2xl border bg-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all">
+                            <button class="absolute right-3">
+                                <span class="text-gray-400">🔍</span>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-4 mt-4 md:mt-0">
+                            <button class="p-2.5 text-gray-600 hover:bg-white/50 rounded-xl transition-colors">
+                                <span>🔔</span>
+                            </button>
+                            <button class="p-2.5 text-gray-600 hover:bg-white/50 rounded-xl transition-colors">
+                                <span>⚙️</span>
+                            </button>
+                            <img src="/api/placeholder/40/40" alt="Profile" class="w-9 h-9 rounded-xl border-2 border-blue-500">
+                        </div>
+                    </header>
+
+                    <!-- Scrollable Content -->
+                    <div class="space-y-6 px-6">
+                        <!-- Overview Section -->
+                        <div class="glass-card rounded-3xl p-6">
+                            <h2 class="text-xl font-semibold mb-6">Overview</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <img src="/api/placeholder/40/40" alt="Profile" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <h3 class="font-semibold">Karimov Mamuriyim</h3>
+                                            <p class="text-sm text-gray-500">Name Cottage</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="h-12 w-full mb-4">
+                                            <svg viewBox="0 0 200 50" class="w-full h-full">
+                                                <path d="M0,40 C20,40 20,10 40,20 C60,30 60,10 80,10 C100,10 110,30 130,30 C150,30 180,10 200,20" 
+                                                      fill="none" stroke="#3b82f6" stroke-width="2"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex justify-between text-sm mt-2">
+                                            <span>1 year</span>
+                                            <span>$225/month</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <img src="/api/placeholder/40/40" alt="Profile" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <h3 class="font-semibold">Abdullayev Alisher</h3>
+                                            <p class="text-sm text-gray-500">Name Cottage</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="h-12 w-full mb-4">
+                                            <svg viewBox="0 0 200 50" class="w-full h-full">
+                                                <path d="M0,30 C20,30 30,10 50,15 C70,20 80,40 100,30 C120,20 140,10 160,25 C180,40 190,20 200,10" 
+                                                      fill="none" stroke="#3b82f6" stroke-width="2"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex justify-between text-sm mt-2">
+                                            <span>1 year</span>
+                                            <span>$225/month</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <img src="/api/placeholder/40/40" alt="Profile" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <h3 class="font-semibold">Umarova Mukadda</h3>
+                                            <p class="text-sm text-gray-500">Name Cottage</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="h-12 w-full mb-4">
+                                            <svg viewBox="0 0 200 50" class="w-full h-full">
+                                                <path d="M0,20 C20,20 30,30 50,35 C70,40 90,10 110,15 C130,20 150,30 170,25 C190,20 195,10 200,15" 
+                                                      fill="none" stroke="#3b82f6" stroke-width="2"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex justify-between text-sm mt-2">
+                                            <span>1 year</span>
+                                            <span>$225/month</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transaction History -->
+                        <div class="glass-card rounded-3xl p-6">
+                            <h2 class="text-lg font-semibold mb-6">Transaction History</h2>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="text-gray-500 text-left">
+                                            <th class="pb-4">PAYMENT NUMBER</th>
+                                            <th class="pb-4">AMOUNT</th>
+                                            <th class="pb-4">STATUS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b hover:bg-gray-50">
+                                            <td class="py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-green-500">✓</span>
+                                                    <div>
+                                                        <p class="font-medium">Payment from #10223</p>
+                                                        <p class="text-sm text-gray-500">Today, 10:30 AM</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-4">
+                                                <span class="font-medium">+ $450.00</span>
+                                            </td>
+                                            <td class="py-4">
+                                                <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm">Completed</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b hover:bg-gray-50">
+                                            <td class="py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-yellow-500">○</span>
+                                                    <div>
+                                                        <p class="font-medium">Process refund to #10224</p>
+                                                        <p class="text-sm text-gray-500">Today, 10:30 AM</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-4">
+                                                <span class="font-medium">- $250.00</span>
+                                            </td>
+                                            <td class="py-4">
+                                                <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm">Completed</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-red-500">✕</span>
+                                                    <div>
+                                                        <p class="font-medium">Payment failed from #10225</p>
+                                                        <p class="text-sm text-gray-500">Today, 10:30 AM</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-4">
+                                                <span class="font-medium">+ $128.00</span>
+                                            </td>
+                                            <td class="py-4">
+                                                <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm">Declined</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="w-full mt-4 text-center text-blue-600 hover:text-blue-700 transition-colors">View All transactions</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="hidden lg:block w-80 h-screen my-4 mr-4">
+                <div class="glass-card rounded-3xl p-6 sticky top-4 overflow-y-auto max-h-[calc(100vh-2rem)]">
+                    <div class="text-right mb-8">
+                        <h2 class="text-lg font-semibold mb-2">PAYMENTS</h2>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors">
+                                <h3 class="text-2xl font-bold">560</h3>
+                                <p class="text-gray-500 text-sm">Applications</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors">
+                                <h3 class="text-2xl font-bold">$21K</h3>
+                                <p class="text-gray-500 text-sm">Orders</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span>Balance</span>
+                                    <span class="font-medium">24/90</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full">
+                                    <div class="h-2 bg-blue-500 rounded-full w-3/12"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span>Orders</span>
+                                    <span class="font-medium">75/90</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full">
+                                    <div class="h-2 bg-blue-500 rounded-full w-9/12"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span>Order Value</span>
+                                    <span class="font-medium">$920/$24,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuButton = document.getElementById('menuButton');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Toggle sidebar
+            function toggleSidebar() {
+                sidebar.classList.toggle('sidebar-closed');
+                sidebar.classList.toggle('sidebar-open');
+                overlay.classList.toggle('hidden');
+                mainContent.classList.toggle('content-pushed');
+            }
+            
+            menuButton.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if (window.innerWidth >= 768) {
+                        sidebar.classList.remove('sidebar-closed');
+                        sidebar.classList.remove('sidebar-open');
+                        overlay.classList.add('hidden');
+                    }
+                }, 250);
+            });
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                card.classList.add('hover-scale');
+            });
+            
+            // Animate elements on load
+            function animateOnLoad() {
+                const elements = document.querySelectorAll('.glass-card, .glass-effect');
+                elements.forEach((element, index) => {
+                    setTimeout(() => {
+                        element.classList.add('fade-in');
+                    }, index * 100);
+                });
+            }
+            
+            animateOnLoad();
+            
+            // Add smooth scrolling behavior to all scrollable elements
+            const scrollableElements = document.querySelectorAll('.scrollable-nav, .content-wrapper');
+            
+            scrollableElements.forEach(element => {
+                element.style.scrollBehavior = 'smooth';
+                
+                // Add hover effect to show custom scrollbar
+                element.addEventListener('mouseenter', () => {
+                    element.style.scrollbarWidth = 'thin';
+                    element.style.scrollbarColor = 'rgba(0,0,0,0.2) transparent';
+                });
+                
+                element.addEventListener('mouseleave', () => {
+                    element.style.scrollbarWidth = 'none';
+                });
+            });
+            
+            // Handle scroll position persistence
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const navWrapper = document.querySelector('.scrollable-nav');
+            
+            // Save scroll position before page unload
+            window.addEventListener('beforeunload', () => {
+                localStorage.setItem('contentScrollPos', contentWrapper.scrollTop);
+                localStorage.setItem('navScrollPos', navWrapper.scrollTop);
+            });
+            
+            // Restore scroll position on page load
+            const savedContentScroll = localStorage.getItem('contentScrollPos');
+            const savedNavScroll = localStorage.getItem('navScrollPos');
+            
+            if (savedContentScroll) contentWrapper.scrollTop = savedContentScroll;
+            if (savedNavScroll) navWrapper.scrollTop = savedNavScroll;
+            
+            // Add active state to menu items
+            const menuItems = document.querySelectorAll('aside a');
+            menuItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    menuItems.forEach(i => i.classList.remove('text-blue-600', 'bg-blue-50', 'border-l-4', 'border-blue-600'));
+                    item.classList.add('text-blue-600', 'bg-blue-50', 'border-l-4', 'border-blue-600');
+                    
+                    if (window.innerWidth < 768) {
+                        toggleSidebar();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

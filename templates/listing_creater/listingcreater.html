@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Creator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response-container {
+            margin-top: 20px;
+        }
+        #title-response, #description-response {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+        .response-heading {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .typing-animation {
+            overflow: hidden;
+            border-right: 2px solid #000;
+            white-space: nowrap;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #000 }
+        }
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        .bullet-point {
+            margin-left: 20px;
+            position: relative;
+        }
+        .bullet-point::before {
+            content: "•";
+            position: absolute;
+            left: -15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Listing Creator</h1>
+    
+    <div class="form-group">
+        <label for="platform">Platform Type:</label>
+        <select id="platform" required>
+            <option value="Amazon">Amazon</option>
+            <option value="eBay">eBay</option>
+            <option value="Etsy">Etsy</option>
+            <option value="Shopify">Shopify</option>
+            <option value="Meesho">Meesho</option>
+            <option value="Flipkart">Flipkart</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Reference URLs (2-4 URLs):</label>
+        <input type="url" id="url1" placeholder="URL 1" required>
+        <input type="url" id="url2" placeholder="URL 2" required>
+        <input type="url" id="url3" placeholder="URL 3">
+        <input type="url" id="url4" placeholder="URL 4">
+    </div>
+
+    <div class="form-group">
+        <label for="description">Product Description:</label>
+        <textarea id="description" rows="4" required placeholder="Enter product details, features, and specifications"></textarea>
+    </div>
+
+    <button onclick="generateListing()">Generate Listing</button>
+
+    <div class="response-container">
+        <div class="response-heading">Generated Title:</div>
+        <div id="title-response"></div>
+        
+        <div class="response-heading">Generated Description:</div>
+        <div id="description-response"></div>
+    </div>
+
+    <script>
+        function formatBulletPoints(text) {
+            return text.replace(/\*\*(.*?)\*\*/g, '<div class="bullet-point">$1</div>');
+        }
+
+        function animateText(element, text) {
+            element.innerHTML = '';
+            let delay = 0;
+            const formattedText = formatBulletPoints(text);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = formattedText;
+            
+            const processNode = (node) => {
+                if (node.nodeType === 3) { // Text node
+                    const chars = node.textContent.split('');
+                    chars.forEach(char => {
+                        const span = document.createElement('span');
+                        span.textContent = char;
+                        span.className = 'letter';
+                        span.style.animationDelay = `${delay}ms`;
+                        element.appendChild(span);
+                        delay += 10;
+                    });
+                } else if (node.nodeType === 1) { // Element node
+                    const newElement = document.createElement(node.tagName);
+                    newElement.className = node.className;
+                    element.appendChild(newElement);
+                    node.childNodes.forEach(child => processNode(child));
+                }
+            };
+            
+            tempDiv.childNodes.forEach(node => processNode(node));
+        }
+
+        function generateListing() {
+            const platform_type = document.getElementById('platform').value;
+            const urls = [
+                document.getElementById('url1').value,
+                document.getElementById('url2').value,
+                document.getElementById('url3').value,
+                document.getElementById('url4').value
+            ].filter(url => url.trim() !== '');
+
+            const description = document.getElementById('description').value;
+
+            if (!platform_type || urls.length < 2 || !description) {
+                alert('Please fill in all required fields (including at least 2 URLs)');
+                return;
+            }
+
+            const titleResponse = document.getElementById('title-response');
+            const descriptionResponse = document.getElementById('description-response');
+
+            titleResponse.innerHTML = 'Analyzing...';
+            descriptionResponse.innerHTML = 'Analyzing...';
+            titleResponse.classList.add('typing-animation');
+            descriptionResponse.classList.add('typing-animation');
+
+            setTimeout(() => {
+                titleResponse.innerHTML = 'Generating...';
+                descriptionResponse.innerHTML = 'Generating...';
+            }, 7000);
+
+            setTimeout(() => {
+                fetch('/listing_creater/ai-chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        platform_type: platform_type,
+                        urls: urls,
+                        description: description
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        titleResponse.innerHTML = `Error: ${data.error}`;
+                        descriptionResponse.innerHTML = '';
+                    } else {
+                        const titleMatch = data.response.match(/\*\*Title:\*\*(.*?)(?=\*\*Description:|$)/s);
+                        const descriptionMatch = data.response.match(/\*\*Description:\*\*\s*([\s\S]*?)(?=\*\*|$)/);
+                        
+                        let title = titleMatch ? titleMatch[1].trim() : 'No title found';
+                        let description = descriptionMatch ? descriptionMatch[1].trim() : 'No description found';
+                        
+                        title = title.replace(/^Product Description:\s*/i, '');
+
+                        titleResponse.classList.remove('typing-animation');
+                        descriptionResponse.classList.remove('typing-animation');
+                        
+                        animateText(titleResponse, title);
+                        animateText(descriptionResponse, description);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    titleResponse.innerHTML = `Error: ${error.message}`;
+                    descriptionResponse.innerHTML = '';
+                });
+            }, 10000);
+        }
+    </script>
+</body>
+</html>

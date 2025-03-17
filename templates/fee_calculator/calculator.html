@@ -1,0 +1,415 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1Matrix - Amazon Fee Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @media (max-width: 640px) {
+            input[type="number"],
+            input[type="text"],
+            select {
+                font-size: 16px; /* Prevents iOS zoom on focus */
+            }
+            
+            .input-group span.currency {
+                font-size: 14px;
+            }
+            
+            label {
+                font-size: 0.875rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <script>
+        // Prevent view source shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Disable right-click
+        {% comment %} document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        }); {% endcomment %}
+    </script>
+</head>
+<body class="font-['Inter'] bg-gradient-to-br from-sky-50 to-blue-50 m-0 min-h-screen">
+    <div class="max-w-7xl mx-auto p-8 md:p-4">
+        <header class="text-center mb-12 animate-[fadeInDown_0.8s_ease-out]">
+            <h1 class="text-5xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">Amazon Fee Calculator</h1>
+            <p class="text-xl text-gray-700 max-w-2xl mx-auto">Maximize your profits with our professional fee calculator. Make informed decisions for your Amazon business.</p>
+        </header>
+
+        <form id="calculatorForm" onsubmit="calculateFees(event)">
+            {% csrf_token %}
+            <div class="bg-white rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] p-10 md:p-6 mb-10 animate-[fadeInUp_0.8s_ease-out]">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-8">
+                    <div class="bg-gray-50 p-4 md:p-6 rounded-2xl shadow-sm">
+                        <div class="mb-6 last:mb-0 relative">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Category</label>
+                            <div class="relative">
+                                <select name="category" id="category" required onchange="updateSubcategories()" class="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border-2 border-gray-200 rounded-xl transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none appearance-none">
+                                    <option value="" disabled selected>Select a category</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6 last:mb-0 relative">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Sub Category</label>
+                            <div class="relative">
+                                <select name="subcategory" id="subcategory" required class="w-full px-4 py-3 md:py-4 bg-white border-2 border-gray-200 rounded-xl text-base transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none appearance-none">
+                                    <option value="" disabled selected>Select a sub category</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <script>
+                                const subcategories = {
+                                    {% for category, subcats in categories_with_subcats.items %}
+                                        "{{ category.id }}": [
+                                            {% for subcategory in subcats %}
+                                                {id: "{{ subcategory.id }}", name: "{{ subcategory.name }}"},
+                                            {% endfor %}
+                                        ],
+                                    {% endfor %}
+                                };
+
+                                function updateSubcategories() {
+                                    const categorySelect = document.getElementById('category');
+                                    const subcategorySelect = document.getElementById('subcategory');
+                                    const selectedCategory = categorySelect.value;
+
+                                    subcategorySelect.innerHTML = '<option value="" disabled selected>Select a sub category</option>';
+
+                                    if (selectedCategory && subcategories[selectedCategory]) {
+                                        subcategories[selectedCategory].forEach(subcategory => {
+                                            const option = document.createElement('option');
+                                            option.value = subcategory.id;
+                                            option.textContent = subcategory.name;
+                                            subcategorySelect.appendChild(option);
+                                        });
+                                    }
+                                }
+                            </script>
+                        </div>
+
+                        <div class="mb-6 last:mb-0 relative">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">GST (%)</label>
+                            <div class="relative">
+                                <select name="gst" id="gst" required class="w-full px-4 py-3 md:py-4 bg-white border-2 border-gray-200 rounded-xl text-base transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none appearance-none">
+                                    <option value="" disabled selected>Select GST percentage</option>
+                                    <option value="0">0%</option>
+                                    <option value="3">3%</option>
+                                    <option value="5">5%</option>
+                                    <option value="12">12%</option>
+                                    <option value="18">18%</option>
+                                    <option value="28">28%</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 md:p-6 rounded-2xl shadow-sm">
+                        <div class="mb-6 last:mb-0">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Product Cost (₹)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">₹</span>
+                                <input type="number" name="product_cost" id="product_cost" required placeholder="Enter product cost" class="w-full pl-8 pr-3 py-2.5 md:py-3 text-sm md:text-base border-2 border-gray-200 rounded-xl transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                            </div>
+                        </div>
+
+                        <div class="mb-6 last:mb-0">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Selling Price (₹)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">₹</span>
+                                <input type="number" name="selling_price" id="selling_price" required placeholder="Enter selling price" class="w-full pl-8 pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl text-base transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                            </div>
+                        </div>
+
+                        <div class="mb-6 last:mb-0">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Miscellaneous Cost (₹)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">₹</span>
+                                <input type="number" name="miscCost" id="miscCost" required placeholder="Enter miscellaneous cost" class="w-full pl-8 pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl text-base transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 md:p-6 rounded-2xl shadow-sm">
+                        <div class="mb-6 last:mb-0">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Dimensions (cm)</label>
+                            <div class="grid grid-cols-3 gap-2 md:gap-3">
+                                <div class="relative">
+                                    <input type="number" name="length" id="length" required placeholder="L" 
+                                        class="w-full px-2 md:px-3 py-2.5 md:py-3 text-sm md:text-base border-2 border-gray-200 rounded-xl text-center transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                                    <span class="absolute -bottom-5 left-0 text-xs text-gray-500">Length</span>
+                                </div>
+                                <div class="relative">
+                                    <input type="number" name="width" id="width" required placeholder="W" 
+                                        class="w-full px-2 md:px-3 py-2.5 md:py-3 text-sm md:text-base border-2 border-gray-200 rounded-xl text-center transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                                    <span class="absolute -bottom-5 left-0 text-xs text-gray-500">Width</span>
+                                </div>
+                                <div class="relative">
+                                    <input type="number" name="height" id="height" required placeholder="H" 
+                                        class="w-full px-2 md:px-3 py-2.5 md:py-3 text-sm md:text-base border-2 border-gray-200 rounded-xl text-center transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                                    <span class="absolute -bottom-5 left-0 text-xs text-gray-500">Height</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6 last:mb-0 mt-8">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Weight (g)</label>
+                            <div class="relative">
+                                <input type="number" name="weight" id="weight" required placeholder="Enter product weight" class="w-full px-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl text-base transition duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                                <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500">g</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-lg font-semibold py-3 md:py-4 px-8 md:px-12 rounded-xl border-none cursor-pointer transition duration-300 block w-full max-w-xs mx-auto mt-10 shadow-[0_4px_6px_rgba(37,99,235,0.2)] hover:translate-y-[-2px] hover:shadow-[0_6px_8px_rgba(37,99,235,0.3)] active:translate-y-[1px]">
+                            Calculate Fees
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="results" class="grid grid-cols-1 md:grid-cols-3 gap-8 animate-[fadeIn_0.8s_ease-out]">
+            <!-- Easy Ship Card -->
+            <div class="bg-white rounded-2xl p-6 shadow-[0_10px_20px_rgba(0,0,0,0.05)]">
+                <h2 class="text-2xl font-bold mb-6">Easy Ship Prime</h2>
+                
+                <!-- Fee Pills -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100">
+                        <span class="text-sm">Referral Fee: </span>
+                        <span id="easyShipReferralFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-black text-white">
+                        <span class="text-sm">GST: </span>
+                        <span id="easyShipGstFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100">
+                        <span class="text-sm">Closing Fee: </span>
+                        <span id="easyShipClosingFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                </div>
+
+                <!-- Shipping Section -->
+                <h3 class="text-xl font-semibold mb-4">Shipping</h3>
+                <div class="space-y-4">
+                    <!-- Local -->
+                    <div class="border rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>Local: </span>
+                            <span id="easyShipLocalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium">
+                            <span>Gross Profit: </span>
+                            <span id="easyShipLocalProfit" class="text-sm text-gray-800 ml-1">₹0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Regional -->
+                    <div class="border rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>Regional: </span>
+                            <span id="easyShipRegionalFee" class="text-sm text-gray-800 ml-1">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium">
+                            <span>Gross Profit: </span>
+                            <span id="easyShipRegionalProfit" class="text-sm text-gray-800 ml-1">₹0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- National -->
+                    <div class="border rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>National: </span>
+                            <span id="easyShipNationalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium">
+                            <span>Gross Profit: </span>
+                            <span id="easyShipNationalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FBA Card -->
+            <div class="bg-[#011635] rounded-2xl p-6 shadow-[0_10px_20px_rgba(0,0,0,0.05)] text-white">
+                <h2 class="text-2xl font-bold mb-6">FBA</h2>
+                
+                <!-- Fee Pills -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20">
+                        <span class="text-sm">Referral Fee: </span>
+                        <span id="fbaReferralFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white text-blue-500">
+                        <span class="text-sm">GST: </span>
+                        <span id="fbaGstFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20">
+                        <span class="text-sm">Closing Fee: </span>
+                        <span id="fbaClosingFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                </div>
+
+                <!-- Shipping Section -->
+                <h3 class="text-xl font-semibold mb-4">Shipping</h3>
+                <div class="space-y-4">
+                    <!-- Local -->
+                    <div class="border border-white/20 rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>Local: </span>
+                            <span id="fbaLocalFee" class="text-sm ml-1 text-white">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-white/80 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium text-white">
+                            <span>Gross Profit: </span>
+                            <span id="fbaLocalProfit" class="text-sm ml-1 text-white">₹0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Regional -->
+                    <div class="border border-white/20 rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>Regional: </span>
+                            <span id="fbaRegionalFee" class="text-sm ml-1 text-white">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-white/80 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium text-white">
+                            <span>Gross Profit: </span>
+                            <span id="fbaRegionalProfit" class="text-sm ml-1 text-white">₹0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- National -->
+                    <div class="border border-white/20 rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>National: </span>
+                            <span id="fbaNationalFee" class="text-sm ml-1 text-white">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-white/80 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium text-white">
+                            <span>Gross Profit: </span>
+                            <span id="fbaNationalProfit" class="text-sm ml-1 text-white">₹0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seller Flex Card -->
+            <div class="bg-white rounded-2xl p-6 shadow-[0_10px_20px_rgba(0,0,0,0.05)]">
+                <h2 class="text-2xl font-bold mb-6">Seller Flex</h2>
+                
+                <!-- Fee Pills -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100">
+                        <span class="text-sm">Referral Fee: </span>
+                        <span id="sellerFlexReferralFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-black text-white">
+                        <span class="text-sm">GST: </span>
+                        <span id="sellerFlexGstFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100">
+                        <span class="text-sm">Closing Fee: </span>
+                        <span id="sellerFlexClosingFee" class="text-sm ml-1">₹0.00</span>
+                    </div>
+                </div>
+
+                <!-- Shipping Section -->
+                <h3 class="text-xl font-semibold mb-4">Shipping</h3>
+                <div class="space-y-4">
+                    <!-- Local -->
+                    <div class="border rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>Local: </span>
+                            <span id="sellerFlexLocalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium">
+                            <span>Gross Profit: </span>
+                            <span id="sellerFlexLocalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Regional -->
+                    <div class="border rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>Regional: </span>
+                            <span id="sellerFlexRegionalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium">
+                            <span>Gross Profit: </span>
+                            <span id="sellerFlexRegionalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- National -->
+                    <div class="border rounded-lg p-4">
+                        <div class="font-medium mb-2">
+                            <span>National: </span>
+                            <span id="sellerFlexNationalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="font-medium">
+                            <span>Gross Profit: </span>
+                            <span id="sellerFlexNationalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/fee_calculator/calculator.js' %}?v=1"></script>
+    <script>
+        // Minify all HTML on load
+        document.addEventListener('DOMContentLoaded', function() {
+            let html = document.documentElement.outerHTML;
+            let minified = html.replace(/\s+/g, ' ').trim();
+            if (window.location.href.indexOf('view-source:') !== -1) {
+                document.documentElement.innerHTML = minified;
+            }
+        });
+    </script>
+</body>
+</html>
+
+
