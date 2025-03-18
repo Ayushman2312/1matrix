@@ -61,13 +61,13 @@ class FeeCalculatorView(TemplateView):
         print(f"Closing fee: {fee}")
         return fee
 
-    def calculate_referral_fee(self, category_id, subcategory_id, selling_price):
+   def calculate_referral_fee(self, category_id, subcategory_id, selling_price):
         print(f"Calculating referral fee for category {category_id}, subcategory {subcategory_id}, selling price {selling_price}")
         # Get all fee structures for this category and subcategory
         fee_structures = FeeStructure.objects.filter(
             category_id=category_id,
             subcategory_id=subcategory_id
-        ).order_by('value')  # Order by value to ensure consistent evaluation
+        )
         
         print(f"Found {fee_structures.count()} fee structures")
         
@@ -79,8 +79,30 @@ class FeeCalculatorView(TemplateView):
         # Convert selling price to Decimal for accurate comparison
         selling_price = Decimal(str(selling_price))
         
+        # Sort fee structures based on their conditions
+        # For 'gt'/'gte', sort by value in descending order
+        # For 'lt'/'lte', sort by value in ascending order
+        gt_structures = []
+        lt_structures = []
+        eq_structures = []
+        
+        for fs in fee_structures:
+            if fs.condition in ['gt', 'gte']:
+                gt_structures.append(fs)
+            elif fs.condition in ['lt', 'lte']:
+                lt_structures.append(fs)
+            elif fs.condition == 'eq':
+                eq_structures.append(fs)
+        
+        # Sort the lists
+        gt_structures.sort(key=lambda x: x.value, reverse=True)  # Descending
+        lt_structures.sort(key=lambda x: x.value)  # Ascending
+        
+        # Combine the sorted lists with eq_structures in the middle
+        sorted_structures = gt_structures + eq_structures + lt_structures
+        
         # Check each fee structure
-        for fee_structure in fee_structures:
+        for fee_structure in sorted_structures:
             value = fee_structure.value
             condition = fee_structure.condition
             
@@ -113,7 +135,7 @@ class FeeCalculatorView(TemplateView):
                 return fee
                 
         # If no matching condition found, use the first fee structure
-        fee = float(selling_price * fee_structures[0].referral_fee_percentage / 100)
+        fee = float(selling_price * sorted_structures[0].referral_fee_percentage / 100)
         print(f"No matching conditions, using first fee structure. Fee: {fee}")
         return fee
 
