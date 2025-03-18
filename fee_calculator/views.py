@@ -61,7 +61,7 @@ class FeeCalculatorView(TemplateView):
         print(f"Closing fee: {fee}")
         return fee
 
-   def calculate_referral_fee(self, category_id, subcategory_id, selling_price):
+    def calculate_referral_fee(self, category_id, subcategory_id, selling_price):
         print(f"Calculating referral fee for category {category_id}, subcategory {subcategory_id}, selling price {selling_price}")
         # Get all fee structures for this category and subcategory
         fee_structures = FeeStructure.objects.filter(
