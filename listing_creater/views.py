@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 
 # Configure API key
-genai.configure(api_key="AIzaSyCuNUPDMtFwkHMS-FuDTr9bCctQGewYPcc")
+genai.configure(api_key="AIzaSyDsXH-_ftI5xn4aWfkwpw__4ixUMs7a7fM")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
 # Context cache file path
