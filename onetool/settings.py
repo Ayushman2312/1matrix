@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-qro_0-wy_990yy88at5b0(1gaz_hcn^!l@7y9_=$ms6!=cop^5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["89.116.20.128","1matrix.io", "www.1matrix.io", "*"]
 
 
 # Application definition
@@ -83,6 +83,17 @@ WSGI_APPLICATION = 'onetool.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': '1matrix',
+#         'USER': 'ayushman',
+#         'PASSWORD': 'Ayushman@23122003',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 DATABASES = {
     'default': {
