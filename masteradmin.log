@@ -2526,3 +2526,119 @@ django.http.request.RawPostDataException: You cannot access body after reading f
 2025-03-02 19:19:48,318 [INFO] Getting context data for AgentsView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:536
 2025-03-05 17:16:11,449 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
 2025-03-16 13:08:07,597 [INFO] Getting context data for SubscriptionView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:562
+2025-03-19 17:26:34,146 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 17:50:24,544 [ERROR] Error processing AI prompt: UNIQUE constraint failed: masteradmin_ai_prompt.platform - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:2643
+Traceback (most recent call last):
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+sqlite3.IntegrityError: UNIQUE constraint failed: masteradmin_ai_prompt.platform
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py", line 2598, in post
+    AI_Prompt.objects.create(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 892, in save
+    self.save_base(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 998, in save_base
+    updated = self._save_table(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 1161, in _save_table
+    results = self._do_insert(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 1202, in _do_insert
+    return manager._insert(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\sql\compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+django.db.utils.IntegrityError: UNIQUE constraint failed: masteradmin_ai_prompt.platform
+2025-03-19 17:58:31,575 [ERROR] Error processing AI prompt: UNIQUE constraint failed: masteradmin_ai_prompt.platform - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:2643
+Traceback (most recent call last):
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+sqlite3.IntegrityError: UNIQUE constraint failed: masteradmin_ai_prompt.platform
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py", line 2598, in post
+    AI_Prompt.objects.create(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 892, in save
+    self.save_base(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 998, in save_base
+    updated = self._save_table(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 1161, in _save_table
+    results = self._do_insert(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\base.py", line 1202, in _do_insert
+    return manager._insert(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\models\sql\compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "C:\Users\hp5cd\Envs\one\lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+django.db.utils.IntegrityError: UNIQUE constraint failed: masteradmin_ai_prompt.platform
+2025-03-19 18:03:19,141 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 18:05:00,772 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 18:35:45,313 [INFO] Getting context data for FeedbacksView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:591
+2025-03-19 18:35:46,520 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 18:40:44,851 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 18:40:46,634 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 18:40:56,456 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 18:41:00,498 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 18:43:40,971 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:12:25,529 [INFO] Getting context data for FeedbacksView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:591
+2025-03-19 19:12:27,272 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:12:30,132 [INFO] Getting context data for FeedbacksView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:591
+2025-03-19 19:13:22,067 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:14:44,602 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:14:48,129 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:16:00,213 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:16:53,647 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:16:54,707 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:17:38,536 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:33:05,044 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:35:08,460 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-19 19:56:22,380 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522
+2025-03-20 12:10:07,330 [INFO] Getting context data for MasterAdminView - C:\Users\hp5cd\OneDrive\Desktop\OneTool Brandise Box\onetool\masteradmin\views.py:522

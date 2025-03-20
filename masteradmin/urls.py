@@ -58,6 +58,8 @@ urlpatterns = [
     path('approve_support/<str:support_id>/', approve_support, name='approve_support'),
     path('reject_support/<str:support_id>/', reject_support, name='reject_support'),
     path('delete_support_department/<str:department_id>/', DeleteSupportDepartmentView.as_view(), name='delete_support_department'),
+    path('ai_prompt/', AI_PromptView.as_view(), name='ai_prompt'),
+
 
 ]
 if settings.DEBUG:

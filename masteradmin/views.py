@@ -2266,8 +2266,7 @@ class SendEmployeeNotificationView(View):
             return JsonResponse({
                 'status': 'error', 
                 'message': 'An error occurred while sending notifications'
-            }, status=500)
-        
+            }, status=500)        
 class SendSupportNotificationView(View):
     def post(self, request):
         try:
@@ -2550,4 +2549,101 @@ class DeleteSupportDepartmentView(View):
             return JsonResponse({
                 'status': 'error',
                 'message': str(e)
+            }, status=500)
+
+
+class AI_PromptView(TemplateView):
+    template_name = 'masteradmin/ai_prompt.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ai_prompts'] = AI_Prompt.objects.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            prompt_text = data.get('prompt', '').strip()
+            
+            # Split prompt into lines
+            lines = prompt_text.split('\n')
+            if len(lines) < 3:  # Need at least action identifier, prompt content, and close identifier
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid prompt format. Must include action identifier, prompt content, and close identifier.'
+                }, status=400)
+
+            action_identifier = lines[0].strip()
+            prompt_content = '\n'.join(lines[1:-1]).strip()
+            close_identifier = lines[-1].strip()
+
+            # Validate close identifier
+            # Extract platform name from action identifier
+            platform_name = action_identifier[1:].strip() if action_identifier.startswith('#') else action_identifier[2:].strip()
+            expected_close = f'Done {platform_name}'
+
+            if close_identifier != expected_close:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': f'Invalid close identifier'
+                }, status=400)
+            # Handle new prompt creation
+            if action_identifier.startswith('#'):
+                platform = action_identifier[1:].strip()  # Remove # and whitespace
+                if not platform or not prompt_content:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Platform name and prompt content are required'
+                    }, status=400)
+
+                # Create new AI prompt with only the prompt content
+                AI_Prompt.objects.create(
+                    platform=platform,
+                    prompt=prompt_content
+                )
+                return JsonResponse({
+                    'status': 'success',
+                    'message': f'Created new prompt for platform: {platform}'
+                })
+
+            # Handle prompt update
+            elif action_identifier.startswith('e-'):
+                platform = action_identifier[2:].strip()  # Remove e- and whitespace
+                if not platform or not prompt_content:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Platform name and prompt content are required'
+                    }, status=400)
+
+                # Find and update existing prompt with only the prompt content
+                try:
+                    existing_prompt = AI_Prompt.objects.get(platform=platform)
+                    existing_prompt.prompt = prompt_content
+                    existing_prompt.save()
+                    return JsonResponse({
+                        'status': 'success',
+                        'message': f'Updated prompt for platform: {platform}'
+                    })
+                except AI_Prompt.DoesNotExist:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': f'No existing prompt found for platform: {platform}'
+                    }, status=404)
+
+            else:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid action identifier. Must start with # or e-'
+                }, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Invalid JSON data'
+            }, status=400)
+        except Exception as e:
+            logger.error(f"Error processing AI prompt: {str(e)}", exc_info=True)
+            return JsonResponse({
+                'status': 'error',
+                'message': f'Error processing AI prompt: {str(e)}'
             }, status=500)

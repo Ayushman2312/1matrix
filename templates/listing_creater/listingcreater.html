@@ -3,130 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listing Creator</title>
+    <title>Professional Listing Creator</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .response-container {
-            margin-top: 20px;
-        }
-        #title-response, #description-response {
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            white-space: pre-wrap;
-        }
-        .response-heading {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            color: #333;
-        }
-        .typing-animation {
-            overflow: hidden;
-            border-right: 2px solid #000;
-            white-space: nowrap;
-            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-        }
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #000 }
-        }
-        .letter {
-            display: inline-block;
-            opacity: 0;
-            animation: fadeIn 0.1s forwards;
-        }
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-        .bullet-point {
-            margin-left: 20px;
-            position: relative;
-        }
-        .bullet-point::before {
-            content: "•";
-            position: absolute;
-            left: -15px;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>AI Listing Creator</h1>
-    
-    <div class="form-group">
-        <label for="platform">Platform Type:</label>
-        <select id="platform" required>
-            <option value="Amazon">Amazon</option>
-            <option value="eBay">eBay</option>
-            <option value="Etsy">Etsy</option>
-            <option value="Shopify">Shopify</option>
-            <option value="Meesho">Meesho</option>
-            <option value="Flipkart">Flipkart</option>
-        </select>
-    </div>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen font-sans antialiased text-gray-800">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-16">
+            <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 via-pink-500 via-red-500 via-yellow-500 via-green-500 via-teal-500 to-blue-500 mb-4 animate-[gradient_8s_ease-in-out_infinite]" style="background-size: 300% 300%; animation: gradient 8s ease-in-out infinite;">AI Listing Creator</h1>
+            <p class="text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 font-light animate-[gradient_8s_ease-in-out_infinite]" style="background-size: 300% 300%; animation: gradient 8s ease-in-out infinite;">Create professional product listings powered by AI</p>
+            <style>
+                @keyframes gradient {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+            </style>
+        </div>
 
-    <div class="form-group">
-        <label>Reference URLs (2-4 URLs):</label>
-        <input type="url" id="url1" placeholder="URL 1" required>
-        <input type="url" id="url2" placeholder="URL 2" required>
-        <input type="url" id="url3" placeholder="URL 3">
-        <input type="url" id="url4" placeholder="URL 4">
-    </div>
+        <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-8 space-y-8 border border-gray-100">
+            <div class="grid gap-6 md:gap-8">
+                <!-- Platform, Brand Name, and Keyword Screenshot in one row -->
+                <div class="flex flex-row gap-4">
+                    <!-- Platform Selection -->
+                    <div class="w-1/3 transform transition-all duration-300 hover:scale-[1.01]">
+                        <label for="platform" class="block text-sm font-semibold text-gray-700 mb-3">Platform</label>
+                        <div class="relative">
+                            <select id="platform" required class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%] appearance-none">
+                                <option value="Amazon">Amazon</option>
+                                <option value="eBay">eBay</option>
+                                <option value="Etsy">Etsy</option>
+                                <option value="Shopify">Shopify</option>
+                                <option value="Meesho">Meesho</option>
+                                <option value="Flipkart">Flipkart</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="form-group">
-        <label for="description">Product Description:</label>
-        <textarea id="description" rows="4" required placeholder="Enter product details, features, and specifications"></textarea>
-    </div>
+                    <!-- Brand Name -->
+                    <div class="w-1/3 transform transition-all duration-300 hover:scale-[1.01]">
+                        <label for="brand" class="block text-sm font-semibold text-gray-700 mb-3">Brand</label>
+                        <input type="text" id="brand" required placeholder="Brand name" class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                    </div>
 
-    <button onclick="generateListing()">Generate Listing</button>
+                    <!-- Keyword Screenshots -->
+                    <div class="w-1/3 transform transition-all duration-300 hover:scale-[1.01]">
+                        <div class="flex items-center gap-2">
+                            <label class="block text-sm font-semibold text-gray-700">Keyword Screenshots</label>
+                            <div class="relative group">
+                                <div class="w-4 h-4 rounded-full border border-black flex items-center justify-center cursor-help">
+                                    <span class="text-xs">?</span>
+                                </div>
+                                <div class="fixed inset-0 flex items-center justify-center bg-black/80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[9999] pointer-events-none">
+                                    <div class="relative">
+                                        <img src="/media/keyword_screenshot.jpg" alt="Keyword Screenshot Example" class="max-h-screen max-w-screen-lg object-contain">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative mt-3">
+                            <div class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%] text-center cursor-pointer flex items-center justify-between" tabindex="0" onpaste="handlePaste(event, document.getElementById('keyword-screenshot1'))" ondblclick="document.getElementById('keyword-screenshot1').click()">
+                                <span>Select and paste image</span>
+                                <input type="file" accept="image/*" id="keyword-screenshot1" class="hidden">
+                                <div id="preview-container1" class="hidden">
+                                    <div class="relative">
+                                        <img id="preview1" class="w-5 h-5 object-cover rounded-lg shadow-md">
+                                        <button onclick="removeImage('keyword-screenshot1', 'preview-container1')" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-600 focus:outline-none shadow-lg text-xs">
+                                            ×
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-[0.7rem] text-gray-500 mt-1 text-start pl-3">Double click to upload</p>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="response-container">
-        <div class="response-heading">Generated Title:</div>
-        <div id="title-response"></div>
-        
-        <div class="response-heading">Generated Description:</div>
-        <div id="description-response"></div>
+                <!-- URLs in one row -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Competitors URLs</label>
+                    <div class="flex flex-row gap-4">
+                        <div class="w-1/4 transform transition-all duration-300 hover:scale-[1.01]">
+                            <input type="url" id="url1" placeholder="First URL" required class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                        </div>
+                        <div class="w-1/4 transform transition-all duration-300 hover:scale-[1.01]">
+                            <input type="url" id="url2" placeholder="Second URL" required class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                        </div>
+                        <div class="w-1/4 transform transition-all duration-300 hover:scale-[1.01]">
+                            <input type="url" id="url3" placeholder="Third URL (optional)" class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                        </div>
+                        <div class="w-1/4 transform transition-all duration-300 hover:scale-[1.01]">
+                            <input type="url" id="url4" placeholder="Fourth URL (optional)" class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Description -->
+                <div class="transform transition-all duration-300 hover:scale-[1.01]">
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Product Description</label>
+                    <textarea id="additional-specs" rows="4" placeholder="Enter product description" class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%] resize-none"></textarea>
+                </div>
+
+                <!-- Generate Button -->
+                <button onclick="generateListing()" class="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white text-lg font-semibold py-5 px-8 rounded-2xl transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg active:translate-y-[1px] focus:ring-4 focus:ring-blue-200 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800">
+                    Generate
+                </button>
+            </div>
+        </div>
+
+        <script>
+            function handlePaste(e, input) {
+                const items = e.clipboardData.items;
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        const file = items[i].getAsFile();
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        input.files = dataTransfer.files;
+                        
+                        const reader = new FileReader();
+                        const previewId = input.id === 'keyword-screenshot1' ? 'preview1' : 'preview2';
+                        const containerId = input.id === 'keyword-screenshot1' ? 'preview-container1' : 'preview-container2';
+                        
+                        reader.onload = function(e) {
+                            const preview = document.getElementById(previewId);
+                            preview.src = e.target.result;
+                            document.getElementById(containerId).classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                        break;
+                    }
+                }
+            }
+
+            function removeImage(inputId, containerId) {
+                document.getElementById(inputId).value = '';
+                document.getElementById(containerId).classList.add('hidden');
+            }
+            
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('keyword-screenshot1').addEventListener('paste', function(e) {
+                    handlePaste(e, this);
+                });
+                document.getElementById('keyword-screenshot2').addEventListener('paste', function(e) {
+                    handlePaste(e, this);
+                });
+            });
+        </script>
+
+        <!-- Results Section -->
+        <div class="response-container mt-16 space-y-8 hidden" id="results-section">
+            <!-- Error Field -->
+            <div id="error-field" class="bg-red-50 rounded-2xl shadow-lg p-8 hidden border border-red-100">
+                <h2 class="text-2xl font-semibold text-red-700 mb-4">Error</h2>
+                <div id="error-message" class="text-red-600"></div>
+            </div>
+
+            <!-- Amazon Title -->
+            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl border border-gray-100">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Title As Per Amazon</h2>
+                <div id="amazon-title" class="text-gray-700 min-h-[50px] whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- Expert Title -->
+            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl border border-gray-100">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Title As Per Expert</h2>
+                <div id="expert-title" class="text-gray-700 min-h-[50px] whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- Bullet Points -->
+            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl border border-gray-100">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Key Features</h2>
+                <div id="bullet-points" class="text-gray-700 min-h-[200px] whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- Description -->
+            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl border border-gray-100">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Product Description</h2>
+                <div id="description" class="text-gray-700 min-h-[100px] whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- Search Terms -->
+            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl border border-gray-100">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Search Terms</h2>
+                <div id="search-terms" class="text-gray-700 min-h-[50px] whitespace-pre-wrap"></div>
+            </div>
+        </div>
     </div>
 
     <script>
+        async function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
         function formatBulletPoints(text) {
-            return text.replace(/\*\*(.*?)\*\*/g, '<div class="bullet-point">$1</div>');
+            return text.replace(/•\s*(.*?)(?=(?:•|\n|$))/g, '<div class="pl-4 py-1 relative before:content-[\'•\'] before:absolute before:left-0 before:text-gray-400">$1</div>');
         }
 
         function animateText(element, text) {
@@ -137,17 +218,18 @@
             tempDiv.innerHTML = formattedText;
             
             const processNode = (node) => {
-                if (node.nodeType === 3) { // Text node
+                if (node.nodeType === 3) {
                     const chars = node.textContent.split('');
                     chars.forEach(char => {
                         const span = document.createElement('span');
                         span.textContent = char;
-                        span.className = 'letter';
+                        span.className = 'opacity-0 transition-opacity duration-100';
                         span.style.animationDelay = `${delay}ms`;
                         element.appendChild(span);
+                        setTimeout(() => span.classList.remove('opacity-0'), delay);
                         delay += 10;
                     });
-                } else if (node.nodeType === 1) { // Element node
+                } else if (node.nodeType === 1) {
                     const newElement = document.createElement(node.tagName);
                     newElement.className = node.className;
                     element.appendChild(newElement);
@@ -158,8 +240,9 @@
             tempDiv.childNodes.forEach(node => processNode(node));
         }
 
-        function generateListing() {
+        async function generateListing() {
             const platform_type = document.getElementById('platform').value;
+            const brand = document.getElementById('brand').value;
             const urls = [
                 document.getElementById('url1').value,
                 document.getElementById('url2').value,
@@ -167,70 +250,89 @@
                 document.getElementById('url4').value
             ].filter(url => url.trim() !== '');
 
-            const description = document.getElementById('description').value;
+            const description = document.getElementById('additional-specs').value;
 
-            if (!platform_type || urls.length < 2 || !description) {
-                alert('Please fill in all required fields (including at least 2 URLs)');
+            const screenshot1 = document.getElementById('keyword-screenshot1').files[0];
+            const screenshot2 = document.getElementById('keyword-screenshot2').files[0];
+            
+            let keyword_screenshots = [];
+            if (screenshot1) {
+                keyword_screenshots.push(await readFileAsBase64(screenshot1));
+            }
+            if (screenshot2) {
+                keyword_screenshots.push(await readFileAsBase64(screenshot2));
+            }
+
+            if (!platform_type || !brand || urls.length < 2 || !description) {
+                document.getElementById('error-field').classList.remove('hidden');
+                document.getElementById('error-message').textContent = 'Please fill in all required fields (including at least 2 URLs)';
+                document.getElementById('results-section').classList.add('hidden');
                 return;
             }
 
-            const titleResponse = document.getElementById('title-response');
-            const descriptionResponse = document.getElementById('description-response');
+            document.getElementById('error-field').classList.add('hidden');
 
-            titleResponse.innerHTML = 'Analyzing...';
-            descriptionResponse.innerHTML = 'Analyzing...';
-            titleResponse.classList.add('typing-animation');
-            descriptionResponse.classList.add('typing-animation');
+            document.getElementById('results-section').classList.remove('hidden');
+            const sections = ['amazon-title', 'expert-title', 'bullet-points', 'description', 'search-terms'];
+            sections.forEach(id => {
+                document.getElementById(id).innerHTML = '<div class="animate-pulse">Generating...</div>';
+            });
 
-            setTimeout(() => {
-                titleResponse.innerHTML = 'Generating...';
-                descriptionResponse.innerHTML = 'Generating...';
-            }, 7000);
-
-            setTimeout(() => {
-                fetch('/listing_creater/ai-chat/', {
+            try {
+                const response = await fetch('/listing_creater/ai-chat/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        platform_type: platform_type,
-                        urls: urls,
-                        description: description
+                        platform_type,
+                        brand,
+                        urls,
+                        description,
+                        keyword_screenshots,
+                        product_specs: {}
                     })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.error) {
-                        titleResponse.innerHTML = `Error: ${data.error}`;
-                        descriptionResponse.innerHTML = '';
-                    } else {
-                        const titleMatch = data.response.match(/\*\*Title:\*\*(.*?)(?=\*\*Description:|$)/s);
-                        const descriptionMatch = data.response.match(/\*\*Description:\*\*\s*([\s\S]*?)(?=\*\*|$)/);
-                        
-                        let title = titleMatch ? titleMatch[1].trim() : 'No title found';
-                        let description = descriptionMatch ? descriptionMatch[1].trim() : 'No description found';
-                        
-                        title = title.replace(/^Product Description:\s*/i, '');
-
-                        titleResponse.classList.remove('typing-animation');
-                        descriptionResponse.classList.remove('typing-animation');
-                        
-                        animateText(titleResponse, title);
-                        animateText(descriptionResponse, description);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    titleResponse.innerHTML = `Error: ${error.message}`;
-                    descriptionResponse.innerHTML = '';
                 });
-            }, 10000);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById('error-field').classList.remove('hidden');
+                    document.getElementById('error-message').textContent = data.error;
+                    document.getElementById('results-section').classList.add('hidden');
+                    sections.forEach(id => {
+                        document.getElementById(id).innerHTML = '';
+                    });
+                } else {
+                    const response = data.response;
+
+                    const amazonTitle = response.amazon_title || 'No Amazon title generated';
+                    animateText(document.getElementById('amazon-title'), amazonTitle);
+
+                    const expertTitle = response.expert_title || 'No expert title generated';
+                    animateText(document.getElementById('expert-title'), expertTitle);
+
+                    const bulletPoints = response.bullet_points.map(point => `• ${point}`).join('\n');
+                    animateText(document.getElementById('bullet-points'), bulletPoints || 'No bullet points generated');
+
+                    const description = response.description.trim() || 'No description generated';
+                    animateText(document.getElementById('description'), description);
+
+                    const searchTerms = response.search_terms || 'No search terms generated';
+                    animateText(document.getElementById('search-terms'), searchTerms);
+                }
+            } catch (error) {
+                document.getElementById('error-field').classList.remove('hidden');
+                document.getElementById('error-message').textContent = `Error: ${error.message}`;
+                document.getElementById('results-section').classList.add('hidden');
+                sections.forEach(id => {
+                    document.getElementById(id).innerHTML = '';
+                });
+            }
         }
     </script>
 </body>

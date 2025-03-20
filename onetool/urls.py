@@ -28,7 +28,7 @@ urlpatterns = [
     path('user/', include('User.urls')),
     path('employee/', include('employee.urls')),
     path('fee_calculator/', include('fee_calculator.urls')),
-    # path('listing_creater/', include('listing_creater.urls')),
+    path('listing_creater/', include('listing_creater.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -152,3 +152,13 @@ class SupportNotification(models.Model):
         return self.support_user.name
 
 
+
+class AI_Prompt(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    platform = models.CharField(max_length=255, unique=True)
+    prompt = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.prompt
