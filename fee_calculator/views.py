@@ -202,22 +202,22 @@ class FeeCalculatorView(TemplateView):
         # Use higher of actual vs volumetric weight in grams
         chargeable_weight = max(weight_in_g, volumetric_weight)
         
-        # Base fee (including Pick & Pack Fee of Rs. 14)
+        # Base fee
         if chargeable_weight <= 500:
-            return 29 + 14
+            return 29
         
         # 501-1000g
         if chargeable_weight <= 1000:
-            return 29 + 14 + 13
+            return 29 + 13
         
         # 1001g to 5000g: Base + 13 + 21 for each 1000g bracket
         if chargeable_weight <= 5000:
             additional_brackets = ((chargeable_weight - 1000) // 1000) + 1
-            return 29 + 14 + 13 + (21 * additional_brackets)
+            return 29 + 13 + (21 * additional_brackets)
         
         # 5001g onwards: Base + 13 + (21 * 4) + 12 for each additional 1000g bracket
         additional_brackets = ((chargeable_weight - 5000) // 1000) + 1
-        return 29 + 14 + 13 + (21 * 4) + (12 * additional_brackets)
+        return 29 + 13 + (21 * 4) + (12 * additional_brackets)
 
     def calculate_fba_national_fee(self, weight_in_g, dimensions):
         print(f"Calculating FBA national fee for weight {weight_in_g}g and dimensions {dimensions}")
@@ -227,22 +227,22 @@ class FeeCalculatorView(TemplateView):
         
         chargeable_weight = max(weight_in_g, volumetric_weight)
         
-        # Base fee (including Pick & Pack Fee of Rs. 14)
+        # Base fee
         if chargeable_weight <= 500:
-            return 62 + 14
+            return 62
         
         # 501-1000g
         if chargeable_weight <= 1000:
-            return 62 + 14 + 25
+            return 62 + 25
         
         # 1001g to 5000g: Base + 25 + 33 for each 1000g bracket
         if chargeable_weight <= 5000:
             additional_brackets = ((chargeable_weight - 1000) // 1000) + 1
-            return 62 + 14 + 25 + (33 * additional_brackets)
+            return 62 + 25 + (33 * additional_brackets)
         
         # 5001g onwards: Base + 25 + (33 * 4) + 16 for each additional 1000g bracket
         additional_brackets = ((chargeable_weight - 5000) // 1000) + 1
-        return 62 + 14 + 25 + (33 * 4) + (16 * additional_brackets)
+        return 62 + 25 + (33 * 4) + (16 * additional_brackets)
 
     def calculate_seller_flex_local_fee(self, weight_in_g, dimensions):
         print(f"Calculating Seller Flex local fee for weight {weight_in_g}g and dimensions {dimensions}")
@@ -254,22 +254,22 @@ class FeeCalculatorView(TemplateView):
         chargeable_weight = max(weight_in_g, volumetric_weight)
         print(f"Chargeable weight (higher of actual {weight_in_g}g vs volumetric {volumetric_weight}g): {chargeable_weight}g")
         
-        # Base fee (including Technology Fee of Rs. 14)
+        # Base fee
         if chargeable_weight <= 500:
-            return 29 + 14
+            return 29
         
         # 501-1000g
         if chargeable_weight <= 1000:
-            return 29 + 14 + 13
+            return 29 + 13
         
         # 1001g to 5000g: Base + 13 + 21 for each 1000g bracket
         if chargeable_weight <= 5000:
             additional_brackets = ((chargeable_weight - 1000) // 1000) + 1
-            return 29 + 14 + 13 + (21 * additional_brackets)
+            return 29 + 13 + (21 * additional_brackets)
         
         # 5001g onwards: Base + 13 + (21 * 4) + 12 for each additional 1000g bracket
         additional_brackets = ((chargeable_weight - 5000) // 1000) + 1
-        return 29 + 14 + 13 + (21 * 4) + (12 * additional_brackets)
+        return 29 + 13 + (21 * 4) + (12 * additional_brackets)
 
     def calculate_seller_flex_national_fee(self, weight_in_g, dimensions):
         print(f"Calculating Seller Flex national fee for weight {weight_in_g}g and dimensions {dimensions}")
@@ -281,22 +281,22 @@ class FeeCalculatorView(TemplateView):
         chargeable_weight = max(weight_in_g, volumetric_weight)
         print(f"Chargeable weight (higher of actual {weight_in_g}g vs volumetric {volumetric_weight}g): {chargeable_weight}g")
         
-        # Base fee (including Technology Fee of Rs. 14)
+        # Base fee
         if chargeable_weight <= 500:
-            return 62 + 14
+            return 62
         
         # 501-1000g
         if chargeable_weight <= 1000:
-            return 62 + 14 + 25
+            return 62 + 25
         
         # 1001g to 5000g: Base + 25 + 33 for each 1000g bracket
         if chargeable_weight <= 5000:
             additional_brackets = ((chargeable_weight - 1000) // 1000) + 1
-            return 62 + 14 + 25 + (33 * additional_brackets)
+            return 62 + 25 + (33 * additional_brackets)
         
         # 5001g onwards: Base + 25 + (33 * 4) + 16 for each additional 1000g bracket
         additional_brackets = ((chargeable_weight - 5000) // 1000) + 1
-        return 62 + 14 + 25 + (33 * 4) + (16 * additional_brackets)
+        return 62 + 25 + (33 * 4) + (16 * additional_brackets)
 
     def post(self, request, *args, **kwargs):
         try:
@@ -404,6 +404,15 @@ class FeeCalculatorView(TemplateView):
                     for location, shipping_fee in location_fees[program_name].items():
                         print(f"Calculating for location: {location}")
                         total_fees = base_fees + Decimal(str(shipping_fee))
+                        
+                        # Add pick & pack fee for FBA
+                        if program_name == 'FBA':
+                            total_fees += Decimal('14')
+                            
+                        # Add technology fee for Seller Flex    
+                        if program_name == 'SELLER_FLEX':
+                            total_fees += Decimal('14')
+                            
                         net_amount = selling_price - total_fees - product_cost
                         profit = net_amount
                         
@@ -496,14 +505,16 @@ class FeeCalculatorView(TemplateView):
        - Regional: Average of local and national fees
     
     2. FBA (Fulfillment by Amazon) Program:
-       - Local: Base fee (Rs. 29) + Pick & Pack fee (Rs. 14) + additional charges based on weight brackets
-       - National: Base fee (Rs. 62) + Pick & Pack fee (Rs. 14) + additional charges based on weight brackets
+       - Local: Base fee (Rs. 29) + additional charges based on weight brackets
+       - National: Base fee (Rs. 62) + additional charges based on weight brackets
        - Regional: Average of local and national fees
+       - Pick & Pack fee (Rs. 14) added to total fees
     
     3. Seller Flex Program:
-       - Local: Base fee (Rs. 29) + Technology fee (Rs. 14) + additional charges based on weight brackets
-       - National: Base fee (Rs. 62) + Technology fee (Rs. 14) + additional charges based on weight brackets
+       - Local: Base fee (Rs. 29) + additional charges based on weight brackets
+       - National: Base fee (Rs. 62) + additional charges based on weight brackets
        - Regional: Average of local and national fees
+       - Technology fee (Rs. 14) added to total fees
     
     Common calculations for all programs:
     - Referral Fee: Based on category and subcategory fee structures
