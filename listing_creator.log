@@ -1394,3 +1394,13 @@ django.db.utils.IntegrityError: UNIQUE constraint failed: masteradmin_ai_prompt.
 2025-03-22 00:41:23,010 - listing_creater.views - DEBUG - Loading conversation history from listing_creater/context_cache.json
 2025-03-22 00:41:23,011 - listing_creater.views - INFO - Loaded 80 conversation entries
 2025-03-22 00:41:23,013 - listing_creater.views - INFO - Chat session started successfully
+2025-03-22 01:04:17,183 - listing_creater.views - INFO - Configuring Gemini API
+2025-03-22 01:04:17,184 - listing_creater.views - INFO - Gemini API configured successfully
+2025-03-22 01:04:17,184 - listing_creater.views - DEBUG - Loading conversation history from listing_creater/context_cache.json
+2025-03-22 01:04:17,186 - listing_creater.views - INFO - Loaded 80 conversation entries
+2025-03-22 01:04:17,188 - listing_creater.views - INFO - Chat session started successfully
+2025-03-22 12:27:17,082 - listing_creater.views - INFO - Configuring Gemini API
+2025-03-22 12:27:17,082 - listing_creater.views - INFO - Gemini API configured successfully
+2025-03-22 12:27:17,082 - listing_creater.views - DEBUG - Loading conversation history from listing_creater/context_cache.json
+2025-03-22 12:27:17,095 - listing_creater.views - INFO - Loaded 80 conversation entries
+2025-03-22 12:27:17,099 - listing_creater.views - INFO - Chat session started successfully
