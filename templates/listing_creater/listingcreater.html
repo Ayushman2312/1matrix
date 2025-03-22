@@ -61,21 +61,20 @@
     </script>
 </head>
 <body class="font-['Inter'] bg-gradient-to-br from-sky-50 to-blue-50 m-0 min-h-screen">
-    <div class="p-4">
+    <div class="max-w-7xl my-[1.3rem] p-8 md:p-4">
         <header class="text-start mb-6">
-            <span class="text-2xl font-500 border-b-2 border-black">AI Listing Creator</span>
+            <span class="ml-[2.6rem] text-2xl font-500 border-b-2 border-black">AI Listing Creator</span>
         </header>
-
         <!-- Main container with flex layout -->
-        <div class="flex main-container gap-8 mx-auto max-w-[1600px]">
+        <div class="flex main-container gap-7 mx-auto max-w-[1600px]">
             <!-- Left Section -->
-            <div class="left-section w-[60%]">
-                <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 space-y-8 border border-gray-100 sticky top-4">
+            <div class="ml-[2.6rem] left-section w-[50%]">
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_0px_5px_rgba(0,0,0,0.1)] p-6 space-y-1 border border-gray-100 sticky top-4">
                     <!-- Input form content remains the same -->
-                    <div class="grid gap-4 md:gap-8">
+                    <div class="grid gap-[1rem] md:gap-[1rem]">
                         <!-- All existing input elements remain unchanged -->
                         <!-- Platform, Brand Name, and Keyword Screenshot -->
-                        <div class="flex flex-row gap-2">
+                        <div class="flex flex-row gap-4">
                             <!-- Platform Selection -->
                             <div class="w-1/3 transform transition-all duration-300 hover:scale-[1.01]">
                                 <label for="platform" class="block text-sm font-semibold text-gray-700 mb-3">Platform</label>
@@ -106,25 +105,29 @@
                             <div class="w-1/2 transform transition-all duration-300 hover:scale-[1.01]">
                                 <div class="flex items-center gap-2">
                                     <label class="block text-sm font-semibold text-gray-700">Keyword Screenshots</label>
-                                    <div class="relative group">
-                                        <div class="w-4 h-4 rounded-full border border-black flex items-center justify-center cursor-help">
+                                    <div class="relative">
+                                        <div class="w-4 h-4 rounded-full border border-black flex items-center justify-center cursor-pointer" onclick="showImagePopup()">
                                             <span class="text-xs">?</span>
                                         </div>
-                                        <div class="fixed inset-0 flex items-center justify-center bg-black/80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[9999] pointer-events-none">
-                                            <div class="relative">
-                                                <img src="/media/keyword_screenshot.jpg" alt="Keyword Screenshot Example" class="max-h-screen max-w-screen-lg object-contain">
+                                        <!-- Popup overlay -->
+                                        <div id="imagePopup" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                                            <div class="relative bg-white p-4 rounded-lg max-w-[90vw] w-[1600px]">
+                                                <button onclick="closeImagePopup()" class="absolute -top-4 -right-4 bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-red-600 focus:outline-none shadow-lg text-2xl">
+                                                    ×
+                                                </button>
+                                                <img src="/media/keyword_screenshot.jpg" alt="Keyword Screenshot Example" class="max-w-full max-h-[80vh] object-contain rounded-lg">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="relative mt-3">
                                     <div class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%] text-center cursor-pointer flex items-center justify-between" tabindex="0" onpaste="handlePaste(event, document.getElementById('keyword-screenshot1'))" ondblclick="document.getElementById('keyword-screenshot1').click()">
-                                        <span>Select and paste image</span>
-                                        <input type="file" accept="image/*" id="keyword-screenshot1" class="hidden">
+                                        <span id="upload-text1">Select and paste image</span>
+                                        <input type="file" accept="image/*" id="keyword-screenshot1" class="hidden" onchange="handleFileSelect(this, 'preview1', 'preview-container1', 'upload-text1')">
                                         <div id="preview-container1" class="hidden">
                                             <div class="relative">
-                                                <img id="preview1" class="w-5 h-5 object-cover rounded-lg shadow-md">
-                                                <button onclick="removeImage('keyword-screenshot1', 'preview-container1')" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-600 focus:outline-none shadow-lg text-xs">
+                                                <img id="preview1" src="" class="w-20 h-20 object-cover rounded-lg shadow-md">
+                                                <button onclick="removeImage('keyword-screenshot1', 'preview-container1', 'upload-text1')" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-600 focus:outline-none shadow-lg text-xs">
                                                     ×
                                                 </button>
                                             </div>
@@ -132,6 +135,36 @@
                                     </div>
                                     <p class="text-[0.7rem] text-gray-500 mt-1 text-start pl-3">Double click to upload</p>
                                 </div>
+
+                                <script>
+                                    function showImagePopup() {
+                                        const popup = document.getElementById('imagePopup');
+                                        popup.style.display = 'flex';
+                                        // Prevent scrolling when popup is open
+                                        document.body.style.overflow = 'hidden';
+                                        
+                                        // Close popup when clicking outside the image
+                                        popup.addEventListener('click', function(e) {
+                                            if (e.target === popup) {
+                                                closeImagePopup();
+                                            }
+                                        });
+
+                                        // Close popup with Escape key
+                                        document.addEventListener('keydown', function(e) {
+                                            if (e.key === 'Escape') {
+                                                closeImagePopup();
+                                            }
+                                        });
+                                    }
+
+                                    function closeImagePopup() {
+                                        const popup = document.getElementById('imagePopup');
+                                        popup.style.display = 'none';
+                                        // Restore scrolling
+                                        document.body.style.overflow = 'auto';
+                                    }
+                                </script>
                             </div>
                         </div>
 
@@ -162,14 +195,19 @@
 
                         <!-- Product Photo Upload -->
                         <div class="transform transition-all duration-300 hover:scale-[1.01]">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Your product's photo</label>
-                            <div class="relative mt-3">
-                                <input type="file" accept="image/*" id="product-photo" class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Your product's photos (Max 2)</label>
+                            <div class="flex gap-4">
+                                <div class="relative mt-3 w-1/2">
+                                    <input type="file" accept="image/*" id="product-photo1" class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                                </div>
+                                <div class="relative mt-3 w-1/2">
+                                    <input type="file" accept="image/*" id="product-photo2" class="w-full px-[0.75rem] py-[0.5rem] rounded-[0.5rem] border border-gray-200 focus:border-blue-400 focus:ring focus:ring-blue-100 outline-none transition duration-200 bg-gray-50/50 hover:bg-white text-[90%]">
+                                </div>
                             </div>
                         </div>
 
                         <!-- Generate Button -->
-                        <button onclick="generateListing()" class="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white text-base font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg active:translate-y-[1px] focus:ring-4 focus:ring-blue-200 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800">
+                        <button onclick="generateListing()" class="w-[100%] bg-[#313A46] text-white text-base py-3 px-6 rounded-[2rem] transition-all duration-300 transform hover:bg-white hover:text-black hover:border hover:border-black hover:shadow-lg active:translate-y-[1px] focus:ring-4 focus:ring-blue-200">
                             Analyze and Generate
                         </button>
                     </div>
@@ -177,45 +215,45 @@
             </div>
 
             <!-- Right Section -->
-            <div class="right-section w-[40%]">
+            <div class="right-section w-[50%]">
                 <!-- Results Section -->
-                <div class="space-y-4 sticky top-4" id="results-section">
+                <div class="space-y-2 sticky top-4" id="results-section">
                     <!-- Error Field -->
-                    <div id="error-field" class="bg-red-50 rounded-2xl shadow-lg p-6 hidden border border-red-100">
+                    <div id="error-field" class="bg-red-50 rounded-2xl shadow-[0_0px_5px_rgba(0,0,0,0.1)] p-6 hidden border border-red-100">
                         <h2 class="text-xl font-semibold text-red-700 mb-2">Error</h2>
                         <div id="error-message" class="text-red-600"></div>
                     </div>
 
                     <!-- Results Grid -->
-                    <div class="grid grid-cols-1 gap-4">
+                    <div class="grid grid-cols-1 gap-0">
                         <!-- Amazon Title -->
-                        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-100">
-                            <h2 class="text-xl font-semibold text-gray-900 mb-3">Title As Per Amazon</h2>
-                            <div id="amazon-title" class="text-gray-700 min-h-[50px] whitespace-pre-wrap"></div>
+                        <div class="bg-transparent backdrop-blur-sm rounded-lg p-2">
+                            <h2 class="text-[0.875rem] font-semibold text-black-900 mb-1">Title As Per Amazon</h2>
+                            <div id="amazon-title" class="text-gray-700 min-h-[40px] border-[2px] border-black-400 rounded-lg p-2 whitespace-pre-wrap text-[0.875rem]"></div>
                         </div>
 
                         <!-- Expert Title -->
-                        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-100">
-                            <h2 class="text-xl font-semibold text-gray-900 mb-3">Title As Per Expert</h2>
-                            <div id="expert-title" class="text-gray-700 min-h-[50px] whitespace-pre-wrap"></div>
+                        <div class="bg-transparent backdrop-blur-sm rounded-lg p-2">
+                            <h2 class="text-[0.875rem] font-semibold text-black-900 mb-1">Title As Per Expert</h2>
+                            <div id="expert-title" class="text-gray-700 min-h-[40px] border-[2px] border-black-400 rounded-lg p-2 whitespace-pre-wrap text-[0.875rem]"></div>
                         </div>
 
                         <!-- Bullet Points -->
-                        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-100">
-                            <h2 class="text-xl font-semibold text-gray-900 mb-3">Key Features</h2>
-                            <div id="bullet-points" class="text-gray-700 min-h-[200px] whitespace-pre-wrap"></div>
+                        <div class="bg-transparent backdrop-blur-sm rounded-lg p-2">
+                            <h2 class="text-[0.875rem] font-semibold text-black-900 mb-1">Key Features</h2>
+                            <div id="bullet-points" class="text-gray-700 min-h-[150px] border-[2px] border-black-400 rounded-lg p-2 whitespace-pre-wrap text-[0.875rem] overflow-y-auto"></div>
                         </div>
 
                         <!-- Description -->
-                        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-100">
-                            <h2 class="text-xl font-semibold text-gray-900 mb-3">Product Description</h2>
-                            <div id="description" class="text-gray-700 min-h-[100px] whitespace-pre-wrap"></div>
+                        <div class="bg-transparent backdrop-blur-sm rounded-lg p-2">
+                            <h2 class="text-[0.875rem] font-semibold text-black-900 mb-1">Product Description</h2>
+                            <div id="description" class="text-gray-700 min-h-[80px] border-[2px] border-black-400 rounded-lg p-2 whitespace-pre-wrap text-[0.875rem]"></div>
                         </div>
 
                         <!-- Search Terms -->
-                        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-100">
-                            <h2 class="text-xl font-semibold text-gray-900 mb-3">Search Terms</h2>
-                            <div id="search-terms" class="text-gray-700 min-h-[50px] whitespace-pre-wrap"></div>
+                        <div class="bg-transparent backdrop-blur-sm rounded-lg p-2">
+                            <h2 class="text-[0.875rem] font-semibold text-black-900 mb-1">Search Terms</h2>
+                            <div id="search-terms" class="text-gray-700 min-h-[40px] border-[2px] border-black-400 rounded-lg p-2 whitespace-pre-wrap text-[0.875rem]"></div>
                         </div>
                     </div>
                 </div>
@@ -245,7 +283,7 @@
             tempDiv.innerHTML = formattedText;
             
             const processNode = (node) => {
-                if (node.nodeType === 3) {
+                if (node.nodeType === 3) { // Text node
                     const chars = node.textContent.split('');
                     chars.forEach(char => {
                         const span = document.createElement('span');
@@ -256,7 +294,7 @@
                         setTimeout(() => span.classList.remove('opacity-0'), delay);
                         delay += 10;
                     });
-                } else if (node.nodeType === 1) {
+                } else if (node.nodeType === 1) { // Element node
                     const newElement = document.createElement(node.tagName);
                     newElement.className = node.className;
                     element.appendChild(newElement);
@@ -297,50 +335,80 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('keyword-screenshot1').addEventListener('paste', function(e) {
-                handlePaste(e, this);
-            });
-            document.getElementById('keyword-screenshot2').addEventListener('paste', function(e) {
-                handlePaste(e, this);
-            });
+            const screenshot1 = document.getElementById('keyword-screenshot1');
+            const screenshot2 = document.getElementById('keyword-screenshot2');
+            
+            if (screenshot1) {
+                screenshot1.addEventListener('paste', function(e) {
+                    handlePaste(e, this);
+                });
+            }
+            
+            if (screenshot2) {
+                screenshot2.addEventListener('paste', function(e) {
+                    handlePaste(e, this);
+                });
+            }
         });
 
         async function generateListing() {
-            const platform_type = document.getElementById('platform').value;
-            const brand = document.getElementById('brand').value;
+            // Get all required elements first
+            const elements = {
+                platform: document.getElementById('platform'),
+                brand: document.getElementById('brand'),
+                url1: document.getElementById('url1'),
+                url2: document.getElementById('url2'),
+                url3: document.getElementById('url3'),
+                url4: document.getElementById('url4'),
+                description: document.getElementById('additional-specs'),
+                productPhoto1: document.getElementById('product-photo1'),
+                productPhoto2: document.getElementById('product-photo2'),
+                errorField: document.getElementById('error-field'),
+                errorMessage: document.getElementById('error-message'),
+                resultsSection: document.getElementById('results-section')
+            };
+
+            // Validate that all required elements exist
+            for (const [key, element] of Object.entries(elements)) {
+                if (!element) {
+                    console.error(`Required element not found: ${key}`);
+                    return;
+                }
+            }
+
             const urls = [
-                document.getElementById('url1').value,
-                document.getElementById('url2').value,
-                document.getElementById('url3').value,
-                document.getElementById('url4').value
+                elements.url1.value,
+                elements.url2.value,
+                elements.url3.value,
+                elements.url4.value
             ].filter(url => url.trim() !== '');
 
-            const description = document.getElementById('additional-specs').value;
-
-            const screenshot1 = document.getElementById('keyword-screenshot1').files[0];
-            const screenshot2 = document.getElementById('keyword-screenshot2').files[0];
-            
-            let keyword_screenshots = [];
-            if (screenshot1) {
-                keyword_screenshots.push(await readFileAsBase64(screenshot1));
+            let product_images = [];
+            if (elements.productPhoto1.files[0]) {
+                product_images.push(await readFileAsBase64(elements.productPhoto1.files[0]));
             }
-            if (screenshot2) {
-                keyword_screenshots.push(await readFileAsBase64(screenshot2));
+            if (elements.productPhoto2.files[0]) {
+                product_images.push(await readFileAsBase64(elements.productPhoto2.files[0]));
             }
 
-            if (!platform_type || !brand || urls.length < 2 || !description) {
-                document.getElementById('error-field').classList.remove('hidden');
-                document.getElementById('error-message').textContent = 'Please fill in all required fields (including at least 2 URLs)';
-                document.getElementById('results-section').classList.add('hidden');
+            // Validation
+            if (!elements.platform.value || !elements.brand.value || urls.length < 2 || !elements.description.value) {
+                elements.errorField.classList.remove('hidden');
+                elements.errorMessage.textContent = 'Please fill in all required fields (including at least 2 URLs)';
+                elements.resultsSection.classList.add('hidden');
                 return;
             }
 
-            document.getElementById('error-field').classList.add('hidden');
-
-            document.getElementById('results-section').classList.remove('hidden');
+            // Hide error and show loading state
+            elements.errorField.classList.add('hidden');
+            elements.resultsSection.classList.remove('hidden');
+            
             const sections = ['amazon-title', 'expert-title', 'bullet-points', 'description', 'search-terms'];
             sections.forEach(id => {
-                document.getElementById(id).innerHTML = '<div class="animate-pulse">Generating...</div>';
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = '<div class="animate-pulse">Generating...</div>';
+                }
             });
 
             try {
@@ -348,13 +416,14 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
                     },
                     body: JSON.stringify({
-                        platform_type,
-                        brand,
+                        platform_type: elements.platform.value,
+                        brand: elements.brand.value,
                         urls,
-                        description,
-                        keyword_screenshots,
+                        description: elements.description.value,
+                        product_images,
                         product_specs: {}
                     })
                 });
@@ -366,38 +435,55 @@
                 const data = await response.json();
 
                 if (data.error) {
-                    document.getElementById('error-field').classList.remove('hidden');
-                    document.getElementById('error-message').textContent = data.error;
-                    document.getElementById('results-section').classList.add('hidden');
-                    sections.forEach(id => {
-                        document.getElementById(id).innerHTML = '';
-                    });
-                } else {
-                    const response = data.response;
-
-                    const amazonTitle = response.amazon_title || 'No Amazon title generated';
-                    animateText(document.getElementById('amazon-title'), amazonTitle);
-
-                    const expertTitle = response.expert_title || 'No expert title generated';
-                    animateText(document.getElementById('expert-title'), expertTitle);
-
-                    const bulletPoints = response.bullet_points.map(point => `• ${point}`).join('\n');
-                    animateText(document.getElementById('bullet-points'), bulletPoints || 'No bullet points generated');
-
-                    const description = response.description.trim() || 'No description generated';
-                    animateText(document.getElementById('description'), description);
-
-                    const searchTerms = response.search_terms || 'No search terms generated';
-                    animateText(document.getElementById('search-terms'), searchTerms);
+                    elements.errorField.classList.remove('hidden');
+                    elements.errorMessage.textContent = data.error;
+                    elements.resultsSection.classList.add('hidden');
+                    return;
                 }
+
+                // Update the results
+                const updateSection = (id, content) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        if (id === 'search-terms') {
+                            // Format search terms with proper spacing and line breaks
+                            const terms = content.split(' ').filter(term => term.trim()).join(' ');
+                            element.innerHTML = `<strong>Search Terms:</strong><br>${terms || 'No search terms generated'}`;
+                        } else if (id === 'bullet-points') {
+                            element.innerHTML = (content || []).map(point => `• ${point}`).join('<br>');
+                        } else {
+                            element.innerHTML = content || `No ${id.replace('-', ' ')} generated`;
+                        }
+                    }
+                };
+
+                updateSection('amazon-title', data.response.amazon_title);
+                updateSection('expert-title', data.response.expert_title);
+                updateSection('bullet-points', data.response.bullet_points);
+                updateSection('description', data.response.description?.trim());
+                updateSection('search-terms', data.response.search_terms);
+
             } catch (error) {
-                document.getElementById('error-field').classList.remove('hidden');
-                document.getElementById('error-message').textContent = `Error: ${error.message}`;
-                document.getElementById('results-section').classList.add('hidden');
-                sections.forEach(id => {
-                    document.getElementById(id).innerHTML = '';
-                });
+                elements.errorField.classList.remove('hidden');
+                elements.errorMessage.textContent = `Error: ${error.message}`;
+                elements.resultsSection.classList.add('hidden');
             }
+        }
+
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
         }
     </script>
 </body>

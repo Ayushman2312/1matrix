@@ -52,7 +52,7 @@
     </script>
 </head>
 <body class="font-['Inter'] bg-gradient-to-br from-sky-50 to-blue-50 m-0 min-h-screen">
-    <div class="max-w-5xl ml-[2.6rem] my-[1.3rem] p-8 md:p-4">
+    <div class="max-w-[100%] mx-[2.6rem] my-[1.3rem] p-8 md:p-4">
         <header class="text-start mb-6">
             <span class="text-2xl font-500 border-b-2 border-black">Fee Calculator</span>
         </header>
@@ -210,7 +210,7 @@
 
         <div id="results" class="grid grid-cols-1 md:grid-cols-3 gap-8 animate-[fadeIn_0.8s_ease-out]">
             <!-- Easy Ship Card -->
-            <div class="bg-white rounded-2xl p-6 shadow-[0_10px_20px_rgba(0,0,0,0.05)]">
+            <div class="bg-white rounded-2xl p-6 shadow-[0_0px_5px_rgba(0,0,0,0.1)]">
                 <h2 class="text-2xl font-bold mb-6">Easy Ship Prime</h2>
                 
                 <!-- Fee Pills -->
@@ -238,7 +238,7 @@
                             <span>Local: </span>
                             <span id="easyShipLocalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
                         </div>
-                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-gray-600 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium">
                             <span>Gross Profit: </span>
                             <span id="easyShipLocalProfit" class="text-sm text-gray-800 ml-1">₹0.00</span>
@@ -251,7 +251,7 @@
                             <span>Regional: </span>
                             <span id="easyShipRegionalFee" class="text-sm text-gray-800 ml-1">₹0.00</span>
                         </div>
-                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-gray-600 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium">
                             <span>Gross Profit: </span>
                             <span id="easyShipRegionalProfit" class="text-sm text-gray-800 ml-1">₹0.00</span>
@@ -264,7 +264,7 @@
                             <span>National: </span>
                             <span id="easyShipNationalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
                         </div>
-                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-gray-600 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium">
                             <span>Gross Profit: </span>
                             <span id="easyShipNationalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
@@ -274,26 +274,22 @@
             </div>
 
             <!-- FBA Card -->
-            <div class="bg-[#011635] rounded-2xl p-6 shadow-[0_10px_20px_rgba(0,0,0,0.05)] text-white">
+            <div class="bg-[#313A46] rounded-2xl p-6 shadow-[0_0px_5px_rgba(0,0,0,0.1)] text-white">
                 <h2 class="text-2xl font-bold mb-6">FBA</h2>
                 
                 <!-- Fee Pills -->
-                <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="flex flex-wrap gap-3 mb-6">
                     <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20">
                         <span class="text-sm">Referral Fee: </span>
                         <span id="fbaReferralFee" class="text-sm ml-1">₹0.00</span>
                     </div>
-                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white text-blue-500">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20">
                         <span class="text-sm">GST: </span>
                         <span id="fbaGstFee" class="text-sm ml-1">₹0.00</span>
                     </div>
                     <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20">
                         <span class="text-sm">Closing Fee: </span>
                         <span id="fbaClosingFee" class="text-sm ml-1">₹0.00</span>
-                    </div>
-                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20">
-                        <span class="text-sm">Pick & Pack Fee: </span>
-                        <span id="fbaPickPackFee" class="text-sm ml-1">₹14.00</span>
                     </div>
                 </div>
 
@@ -303,10 +299,10 @@
                     <!-- Local -->
                     <div class="border border-white/20 rounded-lg p-4">
                         <div class="font-medium mb-2">
-                            <span>Local: </span>
-                            <span id="fbaLocalFee" class="text-sm ml-1 text-white">₹0.00</span>
+                            <span>Local: </span> 
+                            <span id="fbaLocalFee" class="text-sm ml-1 text-white">₹0.00</span>+ ₹14 (Pick & Pack)
                         </div>
-                        <div class="text-sm text-white/80 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-white/80 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium text-white">
                             <span>Gross Profit: </span>
                             <span id="fbaLocalProfit" class="text-sm ml-1 text-white">₹0.00</span>
@@ -316,10 +312,10 @@
                     <!-- Regional -->
                     <div class="border border-white/20 rounded-lg p-4">
                         <div class="font-medium mb-2">
-                            <span>Regional: </span>
-                            <span id="fbaRegionalFee" class="text-sm ml-1 text-white">₹0.00</span>
+                            <span>Regional: </span> 
+                            <span id="fbaRegionalFee" class="text-sm ml-1 text-white">₹0.00</span>+ ₹14 (Pick & Pack)
                         </div>
-                        <div class="text-sm text-white/80 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-white/80 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium text-white">
                             <span>Gross Profit: </span>
                             <span id="fbaRegionalProfit" class="text-sm ml-1 text-white">₹0.00</span>
@@ -329,10 +325,10 @@
                     <!-- National -->
                     <div class="border border-white/20 rounded-lg p-4">
                         <div class="font-medium mb-2">
-                            <span>National: </span>
-                            <span id="fbaNationalFee" class="text-sm ml-1 text-white">₹0.00</span>
+                            <span>National: </span> 
+                            <span id="fbaNationalFee" class="text-sm ml-1 text-white">₹0.00</span>+ ₹14 (Pick & Pack)
                         </div>
-                        <div class="text-sm text-white/80 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-white/80 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium text-white">
                             <span>Gross Profit: </span>
                             <span id="fbaNationalProfit" class="text-sm ml-1 text-white">₹0.00</span>
@@ -342,11 +338,11 @@
             </div>
 
             <!-- Seller Flex Card -->
-            <div class="bg-white rounded-2xl p-6 shadow-[0_10px_20px_rgba(0,0,0,0.05)]">
+            <div class="bg-white rounded-2xl p-6 shadow-[0_0px_5px_rgba(0,0,0,0.1)]">
                 <h2 class="text-2xl font-bold mb-6">Seller Flex</h2>
                 
                 <!-- Fee Pills -->
-                <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="flex flex-wrap gap-3 mb-6">
                     <div class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100">
                         <span class="text-sm">Referral Fee: </span>
                         <span id="sellerFlexReferralFee" class="text-sm ml-1">₹0.00</span>
@@ -359,10 +355,6 @@
                         <span class="text-sm">Closing Fee: </span>
                         <span id="sellerFlexClosingFee" class="text-sm ml-1">₹0.00</span>
                     </div>
-                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100">
-                        <span class="text-sm">Technology Fee: </span>
-                        <span id="sellerFlexTechFee" class="text-sm ml-1">₹14.00</span>
-                    </div>
                 </div>
 
                 <!-- Shipping Section -->
@@ -371,10 +363,10 @@
                     <!-- Local -->
                     <div class="border rounded-lg p-4">
                         <div class="font-medium mb-2">
-                            <span>Local: </span>
-                            <span id="sellerFlexLocalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                            <span>Local: </span> 
+                            <span id="sellerFlexLocalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>+ ₹14 (Tech Fee)
                         </div>
-                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-gray-600 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium">
                             <span>Gross Profit: </span>
                             <span id="sellerFlexLocalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
@@ -384,10 +376,10 @@
                     <!-- Regional -->
                     <div class="border rounded-lg p-4">
                         <div class="font-medium mb-2">
-                            <span>Regional: </span>
-                            <span id="sellerFlexRegionalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                            <span>Regional: </span> 
+                            <span id="sellerFlexRegionalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>+ ₹14 (Tech Fee)
                         </div>
-                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-gray-600 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium">
                             <span>Gross Profit: </span>
                             <span id="sellerFlexRegionalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
@@ -397,10 +389,10 @@
                     <!-- National -->
                     <div class="border rounded-lg p-4">
                         <div class="font-medium mb-2">
-                            <span>National: </span>
-                            <span id="sellerFlexNationalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>
+                            <span>National: </span> 
+                            <span id="sellerFlexNationalFee" class="text-sm text-gray-600 ml-1">₹0.00</span>+ ₹14 (Tech Fee)
                         </div>
-                        <div class="text-sm text-gray-600 mb-2">Referral Fee + Product Cost + GST + Closing Fee + Shipping - Selling Price</div>
+                        <div class="text-sm text-gray-600 mb-2">All Fees + All Costs + GST + Shipping - Selling Price</div>
                         <div class="font-medium">
                             <span>Gross Profit: </span>
                             <span id="sellerFlexNationalProfit" class="text-sm text-gray-600 ml-1">₹0.00</span>
@@ -421,6 +413,29 @@
             }
         });
     </script>
+<script>
+    // Save form data before page unload
+    window.onbeforeunload = function() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            localStorage.setItem(input.id, input.value);
+        });
+    };
+
+    // Restore form data on page load 
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            const savedValue = localStorage.getItem(input.id);
+            if (savedValue) {
+                input.value = savedValue;
+                // Trigger change event to recalculate fees
+                const event = new Event('change');
+                input.dispatchEvent(event);
+            }
+        });
+    });
+</script>
 </body>
 </html>
 {% endblock %}

@@ -22,13 +22,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Configure API key
-genai.configure(api_key="AIzaSyDsXH-_ftI5xn4aWfkwpw__4ixUMs7a7fM")
-model = genai.GenerativeModel("gemini-2.0-flash")
-
 logger.info("Configuring Gemini API")
 try:
     genai.configure(api_key="AIzaSyDsXH-_ftI5xn4aWfkwpw__4ixUMs7a7fM")
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash")
     logger.info("Gemini API configured successfully")
 except Exception as e:
     logger.error(f"Failed to configure Gemini API: {str(e)}")
@@ -94,6 +91,7 @@ def ai_chat_view(request):
             description = data.get("description")
             keyword_screenshots = data.get("keyword_screenshots", [])
             product_specs = data.get("product_specs", {})
+            product_images = data.get("product_images", [])
             
             logger.info(f"Received request for platform: {platform_type}, brand: {brand}")
             logger.debug(f"URLs: {urls}")
@@ -103,13 +101,15 @@ def ai_chat_view(request):
             if not platform_type or len(urls) < 2 or not description:
                 logger.warning("Invalid input: missing required fields")
                 return JsonResponse({
-                    "error": "Invalid input. Provide platform_type, at least 2 URLs, and description."
+                    "error": "Invalid input. Provide platform_type, at least 2 URLs, and description.",
+                    "log": "Invalid input: missing required fields"
                 }, status=400)
 
             if len(urls) > 4:
                 logger.warning("Too many URLs provided")
                 return JsonResponse({
-                    "error": "Maximum 4 URLs are allowed."
+                    "error": "Maximum 4 URLs are allowed.",
+                    "log": "Too many URLs provided"
                 }, status=400)
 
             # Analyze keyword screenshots
@@ -121,6 +121,15 @@ def ai_chat_view(request):
                 image_analysis_results.append(analysis)
             logger.info("Completed keyword screenshot analysis")
 
+            # Analyze product images
+            logger.info("Starting product image analysis")
+            product_image_analysis = []
+            for i, image in enumerate(product_images[:2]):  # Limit to 2 images
+                logger.debug(f"Analyzing product image {i+1}")
+                analysis = analyze_image(image)
+                product_image_analysis.append(analysis)
+            logger.info("Completed product image analysis")
+
             # Create prompt
             logger.debug("Creating user input prompt")
             user_input = (
@@ -129,6 +138,7 @@ def ai_chat_view(request):
                 f"URLs: {', '.join(urls)}\n"
                 f"Description: {description}\n"
                 f"Keyword Analysis: {', '.join(image_analysis_results)}\n"
+                f"Product Image Analysis: {', '.join(product_image_analysis)}\n"
                 f"Generate an insightful response based on this information."
             )
 
@@ -157,6 +167,8 @@ def ai_chat_view(request):
                     '   - Stay strictly under 200 bytes (spaces/punctuation not counted).\\n'
                     '   - Exceeding the limit means no indexing.\\n'
                     '   - Amazon may selectively index keywords based on relevance.\\n\\n'
+                    '   - Search Terms Guidelines:\\n'
+                    'remember to provide search terms with comma serperated values\\n'
                     '4. Competitor & Keyword Input Validation:\\n'
                     '   - Accept up to 4 competitor listing URLs. Validate:\\n'
                     '     a. Only accept links from Amazon.in or Amazon.com.\\n'
@@ -205,6 +217,7 @@ def ai_chat_view(request):
                     brand=brand,
                     urls=urls,
                     keyword_screenshots=keyword_screenshots,
+                    product_images=product_images,
                     product_specs=product_specs
                 )
                 logger.debug(f"Created listing with ID: {listing.id}")
@@ -212,6 +225,7 @@ def ai_chat_view(request):
                 # Format the response as structured JSON
                 logger.debug("Formatting AI response")
                 ai_response = response.text
+                print(ai_response)
                 formatted_response = {
                     "amazon_title": "",
                     "expert_title": "",
@@ -229,48 +243,69 @@ def ai_chat_view(request):
                     line = line.strip()
                     if not line:
                         continue
+
+                    # Title parsing logic
+                    if line.startswith("Titles:"):
+                        current_section = "titles"
+                        continue
+                    elif current_section == "titles":
+                        if line.startswith("a."):
+                            formatted_response["amazon_title"] = line[2:].strip()
+                        elif line.startswith("b."):
+                            formatted_response["expert_title"] = line[2:].strip()
+                            current_section = None  # End titles section
                     
-                    if "Title a:" in line.lower() or "amazon-compliant title:" in line.lower():
-                        current_section = "amazon_title"
-                        formatted_response["amazon_title"] = line.split(":", 1)[1].strip()
-                    elif "Title b:" in line.lower() or "expert title:" in line.lower():
-                        current_section = "expert_title"
-                        formatted_response["expert_title"] = line.split(":", 1)[1].strip()
+                    # Rest of the parsing logic
                     elif "bullet points:" in line.lower():
                         current_section = "bullet_points"
                     elif "product description:" in line.lower():
                         current_section = "description"
+                        formatted_response["description"] = ""  # Initialize empty description
                     elif "search terms:" in line.lower():
                         current_section = "search_terms"
-                        formatted_response["search_terms"] = line.split(":", 1)[1].strip() if ":" in line else ""
-                    elif line.startswith("*") or line.startswith("•") and current_section == "bullet_points":
+                        if ":" in line:
+                            formatted_response["search_terms"] = line.split(":", 1)[1].strip()
+                    elif current_section == "bullet_points" and (line.startswith("*") or line.startswith("•")):
                         formatted_response["bullet_points"].append(line.lstrip("*• ").strip())
-                    elif current_section == "description" and line:
+                    elif current_section == "description":
                         formatted_response["description"] += " " + line
+                    elif current_section == "search_terms" and not line.lower().startswith("search terms"):
+                        formatted_response["search_terms"] += " " + line
 
-                logger.debug("Response formatting complete")
+                # Clean up search terms
+                if formatted_response["search_terms"]:
+                    # Remove duplicate words and clean up spacing
+                    search_terms_list = formatted_response["search_terms"].split()
+                    search_terms_unique = []
+                    [search_terms_unique.append(x) for x in search_terms_list if x not in search_terms_unique]
+                    formatted_response["search_terms"] = " ".join(search_terms_unique)
+
+                logger.debug(f"Formatted search terms: {formatted_response['search_terms']}")
                 logger.debug(f"Formatted response: {formatted_response}")
-                
                 return JsonResponse({
                     "response": formatted_response,
-                    "listing_id": str(listing.id)
+                    "listing_id": str(listing.id),
+                    "log": "Successfully generated listing"
                 })
                 
             except Exception as e:
                 logger.error(f"AI service error: {str(e)}", exc_info=True)
                 return JsonResponse({
-                    "error": f"AI service error: {str(e)}"
+                    "error": f"AI service error: {str(e)}",
+                    "log": f"AI service error: {str(e)}"
                 }, status=500)
 
         except json.JSONDecodeError as e:
             logger.error(f"JSON decode error: {str(e)}", exc_info=True)
             return JsonResponse({
-                "error": "Invalid JSON data in request"
+                "error": "Invalid JSON data in request",
+                "log": f"JSON decode error: {str(e)}"
             }, status=400)
         except Exception as e:
             logger.error(f"Server error: {str(e)}", exc_info=True)
             return JsonResponse({
-                "error": f"Server error: {str(e)}"
+                "error": f"Server error: {str(e)}",
+                "log": f"Server error: {str(e)}"
             }, status=500)
 
     return render(request, "listing_creater/listingcreater.html")

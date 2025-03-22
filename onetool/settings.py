@@ -147,6 +147,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
