@@ -1,4 +1,4 @@
-{% extends 'user_dashboard/base.html' %}
+a{% extends 'user_dashboard/base.html' %}
 {% load static %}
 {% block content %}
 <!DOCTYPE html>
@@ -101,6 +101,22 @@
                                         ],
                                     {% endfor %}
                                 };
+                                function updateSubcategories() {
+    const categorySelect = document.getElementById('category');
+    const subcategorySelect = document.getElementById('subcategory');
+    const selectedCategory = categorySelect.value;
+
+    subcategorySelect.innerHTML = '<option value="" disabled selected>Select a sub category</option>';
+
+    if (selectedCategory && subcategories[selectedCategory]) {
+        subcategories[selectedCategory].forEach(subcategory => {
+            const option = document.createElement('option');
+            option.value = subcategory.id;
+            option.textContent = subcategory.name;
+            subcategorySelect.appendChild(option);
+        });
+    }
+}
                             </script>
                         </div>
 
