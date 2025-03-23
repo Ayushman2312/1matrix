@@ -52,13 +52,13 @@
     </script>
 </head>
 <body class="font-['Inter'] bg-gradient-to-br from-sky-50 to-blue-50 m-0 min-h-screen">
-    <div class="max-w-[100%] mx-[2.6rem] my-[1.3rem] p-8 md:p-4">
+    <div class="max-w-[100%] mx-[2.6rem] md:mx-[2.6rem] my-[1.3rem] p-4 md:p-8">
         <header class="text-start mb-6">
             <span class="text-2xl font-500 border-b-2 border-black">Fee Calculator</span>
         </header>
         <form id="calculatorForm" onsubmit="calculateFees(event)">
             {% csrf_token %}
-            <div class="bg-white rounded-2xl shadow-[0_0px_5px_rgba(0,0,0,0.1)] p-6 md:p-4 mb-8">
+            <div class="bg-white rounded-2xl shadow-[0_0px_5px_rgba(0,0,0,0.1)] p-4 md:p-6 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                     <!-- Category Section -->
                     <div class="bg-gray-50 p-4 rounded-xl shadow-sm">
@@ -101,23 +101,6 @@
                                         ],
                                     {% endfor %}
                                 };
-
-                                function updateSubcategories() {
-                                    const categorySelect = document.getElementById('category');
-                                    const subcategorySelect = document.getElementById('subcategory');
-                                    const selectedCategory = categorySelect.value;
-
-                                    subcategorySelect.innerHTML = '<option value="" disabled selected>Select a sub category</option>';
-
-                                    if (selectedCategory && subcategories[selectedCategory]) {
-                                        subcategories[selectedCategory].forEach(subcategory => {
-                                            const option = document.createElement('option');
-                                            option.value = subcategory.id;
-                                            option.textContent = subcategory.name;
-                                            subcategorySelect.appendChild(option);
-                                        });
-                                    }
-                                }
                             </script>
                         </div>
 
@@ -402,40 +385,7 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'js/fee_calculator/calculator.js' %}?v=1"></script>
-    <script>
-        // Minify all HTML on load
-        document.addEventListener('DOMContentLoaded', function() {
-            let html = document.documentElement.outerHTML;
-            let minified = html.replace(/\s+/g, ' ').trim();
-            if (window.location.href.indexOf('view-source:') !== -1) {
-                document.documentElement.innerHTML = minified;
-            }
-        });
-    </script>
-<script>
-    // Save form data before page unload
-    window.onbeforeunload = function() {
-        const inputs = document.querySelectorAll('input');
-        inputs.forEach(input => {
-            localStorage.setItem(input.id, input.value);
-        });
-    };
-
-    // Restore form data on page load 
-    document.addEventListener('DOMContentLoaded', function() {
-        const inputs = document.querySelectorAll('input');
-        inputs.forEach(input => {
-            const savedValue = localStorage.getItem(input.id);
-            if (savedValue) {
-                input.value = savedValue;
-                // Trigger change event to recalculate fees
-                const event = new Event('change');
-                input.dispatchEvent(event);
-            }
-        });
-    });
-</script>
+    <script src="{% static 'js/fee_calculator/calculator.js' %}?v=2"></script>
 </body>
 </html>
 {% endblock %}

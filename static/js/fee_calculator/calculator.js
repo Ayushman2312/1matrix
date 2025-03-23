@@ -174,3 +174,49 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('results').style.display = 'none';
         });
+
+// Save form data before page unload
+window.onbeforeunload = function() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        localStorage.setItem(input.id, input.value);
+    });
+};
+
+// Restore form data on page load 
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        const savedValue = localStorage.getItem(input.id);
+        if (savedValue) {
+            input.value = savedValue;
+            // Trigger change event to recalculate fees
+            const event = new Event('change');
+            input.dispatchEvent(event);
+        }
+    });
+});
+// Minify all HTML on load
+document.addEventListener('DOMContentLoaded', function() {
+    let html = document.documentElement.outerHTML;
+    let minified = html.replace(/\s+/g, ' ').trim();
+    if (window.location.href.indexOf('view-source:') !== -1) {
+        document.documentElement.innerHTML = minified;
+    }
+});
+function updateSubcategories() {
+    const categorySelect = document.getElementById('category');
+    const subcategorySelect = document.getElementById('subcategory');
+    const selectedCategory = categorySelect.value;
+
+    subcategorySelect.innerHTML = '<option value="" disabled selected>Select a sub category</option>';
+
+    if (selectedCategory && subcategories[selectedCategory]) {
+        subcategories[selectedCategory].forEach(subcategory => {
+            const option = document.createElement('option');
+            option.value = subcategory.id;
+            option.textContent = subcategory.name;
+            subcategorySelect.appendChild(option);
+        });
+    }
+}
