@@ -204,19 +204,3 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.innerHTML = minified;
     }
 });
-function updateSubcategories() {
-    const categorySelect = document.getElementById('category');
-    const subcategorySelect = document.getElementById('subcategory');
-    const selectedCategory = categorySelect.value;
-
-    subcategorySelect.innerHTML = '<option value="" disabled selected>Select a sub category</option>';
-
-    if (selectedCategory && subcategories[selectedCategory]) {
-        subcategories[selectedCategory].forEach(subcategory => {
-            const option = document.createElement('option');
-            option.value = subcategory.id;
-            option.textContent = subcategory.name;
-            subcategorySelect.appendChild(option);
-        });
-    }
-}
